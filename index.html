@@ -1,0 +1,1338 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Amigo Invisible de Cotos</title>
+<meta name="theme-color" content="#10231c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Cotos">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icono-180.png">
+<link rel="icon" href="icono-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,800;1,9..144,600;1,9..144,800&family=Figtree:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* Chalet de Cotos en Nochebuena: noche de pinar, nieve, chimenea y bodega abierta */
+:root{
+  --noche:#0f231b; --pino:#1f4d3a; --pino-osc:#143528;
+  --vino:#7d1d2c; --vino-osc:#4a0f19; --oro:#d4a64a; --oro-osc:#9a7228;
+  --crema:#fbf6ec; --papel:#fffdf8; --tinta:#2a1d17; --gris:#7b6a5c; --borde:#e6d6b5;
+  --display:'Fraunces',Georgia,'Times New Roman',serif; --texto:'Figtree',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:var(--texto); color:var(--tinta); font-size:16px; line-height:1.5;
+  background:var(--noche);
+  background-image:
+    radial-gradient(ellipse 80% 40% at 50% 105%, rgba(212,120,40,.28), transparent 70%),
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,.10) 0 1.2px, transparent 2px),
+    radial-gradient(circle at 72% 64%, rgba(255,255,255,.08) 0 1px, transparent 1.8px),
+    linear-gradient(180deg,#0b1a14 0%,#123026 55%,#0f231b 100%);
+  background-size:100% 100%,46px 46px,61px 61px,100% 100%;
+  background-attachment:fixed;
+  min-height:100vh; overflow-x:hidden;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+a{color:var(--vino);font-weight:600}
+.envoltura{max-width:720px;margin:0 auto;position:relative;z-index:2}
+
+/* Guirnalda de luces cálidas */
+.luces{display:flex;justify-content:space-around;height:24px;position:relative;overflow:hidden;padding-top:env(safe-area-inset-top)}
+.luces::before{content:'';position:absolute;left:-5%;right:-5%;top:calc(env(safe-area-inset-top) - 6px);height:14px;border-bottom:2px solid #2c4a3b;border-radius:0 0 50% 50%/0 0 100% 100%}
+.bombilla{width:7px;height:10px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;margin-top:10px;background:currentColor;box-shadow:0 0 10px 2px currentColor;animation:parpadeo 2.6s ease-in-out infinite alternate}
+@keyframes parpadeo{from{opacity:1}to{opacity:.45}}
+
+/* Nieve */
+.copo{position:fixed;top:-24px;color:#fff;pointer-events:none;z-index:1;animation:caer linear infinite;opacity:.55}
+@keyframes caer{to{transform:translateY(112vh) translateX(30px)}}
+
+/* Cabecera */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;padding:8px 10px;background:rgba(15,35,27,.92);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);border-bottom:1px solid rgba(212,166,74,.45)}
+.nav a{color:#f3e6c8;text-decoration:none;font-weight:600;padding:6px 13px;border-radius:999px;font-size:15px;border:1px solid rgba(212,166,74,.35)}
+.nav a.activo{background:var(--oro);color:var(--noche);border-color:var(--oro)}
+.hero{text-align:center;padding:26px 16px 0;color:#f3e6c8;position:relative}
+.escudo{font-size:15px;letter-spacing:.32em;text-transform:uppercase;color:var(--oro);font-weight:800}
+.titulo{font-family:var(--display);font-weight:800;font-style:italic;font-size:clamp(46px,13vw,84px);margin:6px 0 0;line-height:.95;color:#fbf1d6;letter-spacing:-.01em;text-wrap:balance;
+  text-shadow:0 2px 0 rgba(0,0,0,.35),0 0 26px rgba(212,166,74,.35)}
+.titulo .de{display:block;font-size:.42em;font-style:normal;font-weight:500;letter-spacing:.02em;color:var(--oro);margin-bottom:4px}
+.subtitulo{font-family:var(--display);font-size:17px;margin:12px auto 0;color:#e7d6b0;max-width:30ch;line-height:1.35}
+.subtitulo b{color:var(--oro);font-weight:800}
+.lema{font-style:italic;font-size:14px;opacity:.85;margin:8px 0 0}
+.sierra{display:block;width:100%;height:58px;margin-top:14px}
+.cinta{display:inline-block;margin:10px auto 0;background:rgba(212,166,74,.14);color:#f6e7c1;font-weight:600;padding:7px 16px;border-radius:999px;border:1px solid rgba(212,166,74,.5);font-size:14px}
+
+/* Tarjetas */
+.tarjeta{margin:18px 12px;padding:18px 16px;border-radius:16px;position:relative;background:var(--crema);border:1px solid var(--borde);box-shadow:0 10px 26px rgba(0,0,0,.35),inset 0 0 0 4px var(--crema),inset 0 0 0 5px rgba(212,166,74,.55)}
+.tarjeta h2{font-family:var(--display);font-style:italic;font-weight:800;color:var(--vino);margin:0 0 10px;font-size:25px;line-height:1.15;text-wrap:balance}
+.tarjeta h2 .adorno{color:var(--oro-osc);font-style:normal}
+.tarjeta h3{font-family:var(--display);font-weight:800;color:var(--pino);margin:16px 0 6px;font-size:19px}
+.tarjeta p{margin:8px 0}
+.tarjeta.presi{background:#fbf0ee;box-shadow:0 10px 26px rgba(0,0,0,.35),inset 0 0 0 4px #fbf0ee,inset 0 0 0 5px rgba(125,29,44,.55)}
+.tarjeta.prueba{background:#eef3ff;box-shadow:0 10px 26px rgba(0,0,0,.35),inset 0 0 0 4px #eef3ff,inset 0 0 0 5px #1d4ed8}
+details.tarjeta>summary{list-style:none;cursor:pointer}
+details.tarjeta>summary::-webkit-details-marker{display:none}
+details.tarjeta>summary h2{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0}
+details.tarjeta>summary h2::after{content:'▾';font-family:var(--texto);font-style:normal;font-size:18px;color:var(--oro-osc)}
+details.tarjeta[open]>summary h2{margin-bottom:10px}
+details.tarjeta[open]>summary h2::after{content:'▴'}
+.estatutos p{font-family:var(--display);font-size:15.5px}
+.estatutos b{color:var(--vino)}
+
+/* Botellas con etiqueta */
+.bola{position:relative;width:70px;height:92px;margin:12px auto 4px;flex:none}
+.bola svg{width:100%;height:100%;display:block;filter:drop-shadow(0 4px 4px rgba(0,0,0,.3))}
+.bola.xl{width:118px;height:156px}
+.bola.s{width:34px;height:46px;margin:0}
+.corona{position:absolute;top:-16px;left:50%;transform:translateX(-50%) rotate(-10deg);font-size:22px;z-index:2;filter:drop-shadow(0 2px 2px rgba(0,0,0,.4))}
+.bola.xl .corona{top:-30px;font-size:38px}
+.bola.s .corona{top:-11px;font-size:13px}
+
+/* Censo */
+.censo{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px}
+.socio{display:block;text-align:center;text-decoration:none;color:var(--tinta);background:var(--papel);border-radius:12px;padding:4px 4px 10px;border:1px solid var(--borde);position:relative}
+.socio:focus-visible{outline:3px solid var(--oro);outline-offset:2px}
+.socio .n{font-weight:800;display:block;font-size:15px;line-height:1.15}
+.socio .t{font-size:10.5px;color:var(--gris);display:block;line-height:1.25}
+.cartel{font-family:var(--display);font-style:italic;font-weight:800;font-size:12.5px;padding:3px 9px;border-radius:999px;display:inline-block;margin-top:6px;line-height:1.2}
+.cartel.pend{background:#fbe3c9;color:#8a3b0f;border:1px dashed #c2621f;animation:temblor 3.2s infinite}
+.cartel.ok{background:var(--pino);color:#f6e7c1;border:1px solid var(--oro)}
+.cartel.gris{background:#efe9df;color:var(--gris);border:1px solid #ddd2c0;font-style:normal;font-weight:600;font-family:var(--texto)}
+@keyframes temblor{0%,90%,100%{transform:rotate(0)}93%{transform:rotate(3deg)}96%{transform:rotate(-3deg)}}
+
+/* Mensajes */
+.msg{display:flex;gap:10px;padding:12px;border-radius:12px;background:var(--papel);border:1px solid var(--borde);margin:10px 0;position:relative}
+.msg .ico{font-size:24px;line-height:1.15;flex:none}
+.msg .cuerpo{flex:1;min-width:0;overflow-wrap:anywhere}
+.msg .fecha{font-size:12px;color:var(--gris);margin-top:4px}
+.msg .de{font-size:11.5px;font-weight:800;color:var(--pino);text-transform:uppercase;letter-spacing:.06em}
+.msg.reproche{background:#fdf1ec;border-color:#e3a58f}
+.msg.reproche.duro{background:#fbe4e1;border:2px solid var(--vino)}
+.msg.solemne{background:#fffaf0;border:3px double var(--oro-osc);font-family:var(--display)}
+.msg.fiesta{background:linear-gradient(135deg,#eef6f0,#fff8e6);border-color:#8fb9a2}
+.msg.presi{background:#fbeff0;border-color:#c98b95}
+.msg.sistema{background:#f2f5f3;border-color:#a9c2b4}
+.msg.cambio{background:#fff6e8;border-color:#e2b87a}
+.msg .nuevo{position:absolute;top:-8px;right:10px;background:var(--vino);color:#fff;font-size:11px;font-weight:800;padding:1px 8px;border-radius:999px}
+.msg .borrar{position:absolute;bottom:6px;right:8px;background:none;border:0;color:var(--vino);font-size:13px;cursor:pointer}
+.vacio{color:var(--gris);font-style:italic}
+
+/* Sobre */
+.sobre{text-align:center;padding:16px;border-radius:12px;background:var(--papel);border:2px dashed var(--oro-osc)}
+.sobre .quien{font-family:var(--display);font-style:italic;font-weight:800;font-size:34px;color:var(--vino);margin:4px 0}
+
+/* Formularios */
+label{display:block;font-weight:600;margin:10px 0 4px}
+input[type=text],input[type=password],input[type=url],input:not([type]),textarea,select{width:100%;font:inherit;font-size:16px;padding:10px 12px;border-radius:10px;border:1.5px solid #cdb88f;background:#fff;color:var(--tinta)}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--oro);outline-offset:1px}
+textarea{min-height:140px;resize:vertical}
+label.check{display:flex;gap:8px;align-items:center;font-weight:400}
+.fila{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:10px 0}
+.btn{font:inherit;font-weight:800;border:0;border-radius:999px;padding:12px 18px;background:var(--vino);color:#fff8ec;box-shadow:0 3px 0 var(--vino-osc);cursor:pointer;font-size:16px;line-height:1.1}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--vino-osc)}
+.btn:focus-visible{outline:3px solid var(--oro);outline-offset:2px}
+.btn.oro{background:var(--oro);color:var(--noche);box-shadow:0 3px 0 var(--oro-osc)}
+.btn.verde{background:var(--pino);box-shadow:0 3px 0 var(--pino-osc)}
+.btn.rosa{background:#9c3a4f;box-shadow:0 3px 0 #5e1f2c}
+.btn.azul{background:#1d4ed8;box-shadow:0 3px 0 #0f2a7a}
+.btn.peq{padding:8px 13px;font-size:14px}
+.btn.grande{font-size:18px;padding:15px 22px;width:100%}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.dictando{animation:latido 1s infinite}
+@keyframes latido{50%{transform:scale(1.05)}}
+.enlaces{list-style:none;padding:0;margin:8px 0}
+.enlaces li{display:flex;gap:8px;align-items:center;background:var(--papel);border:1px solid var(--borde);border-radius:10px;padding:6px 10px;margin:6px 0;overflow-wrap:anywhere}
+.enlaces li a{flex:1}
+.nota{font-size:13px;color:var(--gris)}
+.carta{background:var(--papel);border-radius:10px;padding:14px;border:1px solid var(--borde);font-family:var(--display);white-space:pre-wrap;overflow-wrap:anywhere;
+  background-image:repeating-linear-gradient(transparent 0 27px,#efe3c9 27px 28px)}
+.carta-cab{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.carta-cab b{font-family:var(--display);font-style:italic;font-weight:800;font-size:21px;color:var(--vino)}
+.pregunta{background:var(--papel);border:1px solid #c9bfd8;border-radius:12px;padding:12px;margin:10px 0}
+.pregunta .q{font-weight:700}
+.pregunta .r{margin-top:8px;padding:8px 10px;background:#eef6f0;border-radius:8px;border-left:4px solid var(--pino)}
+.pregunta .r.pend{background:#fff4e3;border-left-color:#d7892c;font-style:italic}
+
+/* Instalar */
+.pasos{counter-reset:p;list-style:none;padding:0}
+.pasos li{counter-increment:p;position:relative;padding:8px 0 8px 46px;margin:6px 0}
+.pasos li::before{content:counter(p);position:absolute;left:0;top:6px;width:32px;height:32px;border-radius:50%;background:var(--vino);color:#fff;font-weight:800;display:grid;place-items:center;border:2px solid var(--oro)}
+.aviso-instalar{margin:12px;padding:10px 14px;background:rgba(212,166,74,.16);border:1px solid rgba(212,166,74,.55);border-radius:12px;color:#f6e7c1;font-weight:600;display:flex;gap:10px;align-items:center;justify-content:space-between}
+.aviso-instalar a{color:var(--oro)}
+
+/* Capas */
+.capa{position:fixed;inset:0;background:rgba(8,20,15,.75);z-index:50;display:flex;align-items:flex-end;justify-content:center;padding:12px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.capa .tarjeta{width:100%;max-width:680px;max-height:86vh;overflow:auto;margin:0}
+.ocupado{position:fixed;inset:0;z-index:60;background:rgba(8,20,15,.85);display:grid;place-items:center;color:#f6e7c1;text-align:center;font-weight:700;font-size:18px;padding:20px}
+.ocupado .giro{font-size:48px;animation:giro 1.6s linear infinite;display:inline-block}
+@keyframes giro{to{transform:rotate(360deg)}}
+.tostada{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:70;background:var(--noche);color:#f6e7c1;padding:12px 18px;border-radius:12px;border:1px solid var(--oro);max-width:92vw;box-shadow:0 8px 20px rgba(0,0,0,.45);font-weight:600;text-align:center}
+.boton-prueba{position:fixed;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom));z-index:40;width:56px;height:56px;border-radius:50%;border:2px solid #fff;background:#1d4ed8;color:#fff;font-size:24px;box-shadow:0 6px 14px rgba(0,0,0,.4);cursor:pointer}
+.franja-prueba{background:repeating-linear-gradient(45deg,#1d4ed8 0 14px,#2b5cf0 14px 28px);color:#fff;text-align:center;font-weight:800;font-size:12.5px;padding:5px 10px}
+.franja-prueba.supervisado{background:repeating-linear-gradient(45deg,#7d1d2c 0 14px,#9c3a4f 14px 28px)}
+table.pares{width:100%;border-collapse:collapse;font-size:15px}
+table.pares td{padding:6px 4px;border-bottom:1px dashed #c9b37a}
+pre.acta{white-space:pre-wrap;font-size:13px;background:var(--papel);border:1px solid var(--borde);padding:10px;border-radius:10px}
+.perfil-cab{text-align:center;padding-top:26px;color:#f6e7c1}
+.perfil-cab h2{font-size:38px;margin:4px 0 0}
+.cargo{display:inline-block;background:var(--pino);color:#f6e7c1;font-weight:700;font-size:13px;padding:4px 13px;border-radius:999px;margin-top:6px;border:1px solid rgba(212,166,74,.5)}
+.cargo.presi{background:var(--oro);color:var(--noche);border-color:var(--oro)}
+.cargo.matriarca{background:var(--vino);color:#fbe9c9;border-color:var(--oro)}
+.contador{font-family:var(--display);font-style:italic;font-weight:800;font-size:21px;color:var(--pino);text-align:center;margin:6px 0}
+.trio{display:flex;justify-content:center;gap:4px;flex-wrap:wrap}
+.trio .bola{margin:14px 0 4px}
+@media (prefers-reduced-motion:reduce){.copo,.bombilla,.cartel.pend,.ocupado .giro{animation:none}}
+</style>
+</head>
+<body>
+<div id="nieve" aria-hidden="true"></div>
+<div class="luces" id="luces" aria-hidden="true"></div>
+<div id="franja"></div>
+<nav class="nav" id="nav"></nav>
+<div class="envoltura"><main id="app"></main></div>
+<div id="capas"></div>
+
+<script type="module">
+/* =====================================================================
+   AMIGO INVISIBLE DE COTOS · Cofradía de Obedientes Tragones y Otros Sablistas
+   =====================================================================
+   CONFIGURACIÓN — lo único que hay que tocar (ver LEEME.md)
+   --------------------------------------------------------------------- */
+
+// 1) Pega aquí la configuración de tu proyecto de Firebase.
+//    Mientras sea null, la app funciona en "modo ensayo": guarda todo
+//    solo en este móvil/ordenador (sirve para probar, no para la familia).
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAcWxv8-UN5nVszxi7HqP388D6PbaE-ZKM",
+  authDomain: "cotos-57d1b.firebaseapp.com",
+  projectId: "cotos-57d1b",
+  storageBucket: "cotos-57d1b.firebasestorage.app",
+  messagingSenderId: "720932961063",
+  appId: "1:720932961063:web:e15ad67df9729494b94702"
+};
+
+// 2) Versión de prueba: true = aparece el botón azul 🔧 con el que se
+//    ve todo (resultado del sorteo, cartas ocultas), se entra en
+//    cualquier perfil y se adelanta el reloj. Para la versión real: false.
+const MODO_PRUEBA = true;
+
+/* ===================================================================== */
+
+const PIN_PRUEBA = '1111';
+const VERSION = '1';
+const PRESIDENTA = 'uge';          // ejerce la Presidencia (she has the power)
+const COPRESIDENTE = 'jorge';      // Presidencia colegiada, ejercicio unipersonal de Uge
+const MATRIARCAS = ['elvira', 'concha'];
+const SOCIOS = [
+  {id:'elvira', nombre:'Elvira'}, {id:'concha', nombre:'Concha'}, {id:'uge', nombre:'Uge'}, {id:'jorge', nombre:'Jorge'},
+  {id:'javier', nombre:'Javier'}, {id:'titi', nombre:'Titi'}, {id:'sixto', nombre:'Sixto'}
+];
+const PAREJAS = [['jorge','uge'],['javier','titi']];
+const IDS = SOCIOS.map(s => s.id);
+const N_TXT = 'siete';
+// Iniciales de cada etiqueta (dos letras cuando la inicial se repite)
+const SIGLAS = {elvira:'E', concha:'C', uge:'U', jorge:'JO', javier:'JV', titi:'T', sixto:'S'};
+// Huella de los códigos de invitación (los códigos en sí solo los tiene Javier)
+const CODIGOS = {
+  elvira:'e0833e12541f95a0f47c9835fe0c6f567e09d060ca0c03bad2cd4e20de721c4b',
+  concha:'b5e75dd3d0a126b4a36bd6ebafd94e620a3cbfbd52eef4ed224e819ddaa9768f',
+  uge:'628016a1de8d6ee04a9bac93c11fd9b11f375366b6de4b0e079ce22126c3dc6d',
+  jorge:'8c17bfd7486c890f99275f955f66607a084af6b0d9c2b7cc2a0cd51eeae3e175',
+  javier:'ad0c2550f1c002b9f7e7388337c499bbd02b40b94544e65a28819512dce20da3',
+  titi:'421dccd7d4a5eae86af49490f237855e5cd8af2520317b75cd4fa7af410c07ef',
+  sixto:'f75449d268395cf6bce69d1159b1fc4c67bfee8105d1916ed706ef21cf515f7a'
+};
+// [vidrio, cápsula, etiqueta, letra, tipo de vino]
+const PALETAS = {
+  elvira:['#3b0d16','#d4a64a','#f7ecd2','#7d1d2c','Gran Reserva'],
+  concha:['#2b1a0d','#d4a64a','#f3e6c8','#4a2a10','Gran Reserva'],
+  uge:['#1c2b22','#e8c25a','#fffaf0','#7d1d2c','Magnum'],
+  jorge:['#24321f','#9c3a4f','#f6efe0','#1f4d3a','Reserva'],
+  javier:['#3a1f0b','#1f4d3a','#efe3cb','#7d1d2c','Crianza'],
+  titi:['#e9d7a5','#c94f6d','#fff6ee','#9c3a4f','Cava'],
+  sixto:['#1e1e1e','#b22234','#f1ecdf','#1f2b44','Tinto de verano']
+};
+const cargo = id => id === PRESIDENTA ? 'Presidenta · she has the power' : id === COPRESIDENTE ? 'Copresidente colegiado' : MATRIARCAS.includes(id) ? 'Matriarca' : 'Gorrón de número';
+const socio = id => SOCIOS.find(s => s.id === id);
+const nom = id => socio(id)?.nombre || id;
+
+/* ---------- Utilidades ---------- */
+const $ = sel => document.querySelector(sel);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const enlazar = s => esc(s).replace(/(https?:\/\/[^\s<]+)/g, u => `<a href="${u}" target="_blank" rel="noopener noreferrer">${u}</a>`);
+const ls = (() => { const mem = {}; return {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return mem[k] ?? null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){ mem[k] = v; } },
+  del(k){ try { localStorage.removeItem(k); } catch(e){ delete mem[k]; } }
+}; })();
+const DIA = 864e5;
+let desfaseDias = MODO_PRUEBA ? Number(ls.get('cotos-desfase') || 0) : 0;
+const ahora = () => Date.now() + desfaseDias * DIA;
+const ahoraISO = () => new Date(ahora()).toISOString();
+const diasDesde = iso => Math.floor((ahora() - Date.parse(iso)) / DIA);
+const fLarga = iso => new Date(iso).toLocaleDateString('es-ES', {day:'numeric', month:'long', year:'numeric'});
+const fHora = iso => new Date(iso).toLocaleString('es-ES', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+const sumarDias = (iso, d) => new Date(Date.parse(iso) + d * DIA).toISOString();
+function tostada(texto, ms = 3800){ const t = document.createElement('div'); t.className = 'tostada'; t.textContent = texto; document.body.appendChild(t); setTimeout(() => t.remove(), ms); }
+const esApp = () => window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+/* ---------- Criptografía: el sorteo queda sellado ---------- */
+const te = new TextEncoder(), td = new TextDecoder();
+const b64 = buf => { const u = new Uint8Array(buf); let s = ''; for (let i = 0; i < u.length; i++) s += String.fromCharCode(u[i]); return btoa(s); };
+const unb64 = s => Uint8Array.from(atob(s), c => c.charCodeAt(0));
+const azar = n => crypto.getRandomValues(new Uint8Array(n));
+const ITER = 250000;
+async function llavePin(pin, salt){
+  const base = await crypto.subtle.importKey('raw', te.encode(pin), 'PBKDF2', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({name:'PBKDF2', salt, iterations:ITER, hash:'SHA-256'}, base, {name:'AES-GCM', length:256}, false, ['encrypt','decrypt']);
+}
+async function crearLlaves(pin){
+  const kp = await crypto.subtle.generateKey({name:'RSA-OAEP', modulusLength:2048, publicExponent:new Uint8Array([1,0,1]), hash:'SHA-256'}, true, ['encrypt','decrypt']);
+  const pub = await crypto.subtle.exportKey('jwk', kp.publicKey);
+  const pkcs8 = await crypto.subtle.exportKey('pkcs8', kp.privateKey);
+  const salt = azar(16), iv = azar(12);
+  const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, await llavePin(pin, salt), pkcs8);
+  const priv = await crypto.subtle.importKey('pkcs8', pkcs8, {name:'RSA-OAEP', hash:'SHA-256'}, false, ['decrypt']);
+  return { doc:{ pub:{kty:pub.kty, n:pub.n, e:pub.e, alg:pub.alg}, privEnc:{salt:b64(salt), iv:b64(iv), ct:b64(ct)}, keyId:b64(azar(6)) }, priv };
+}
+async function abrirLlave(privEnc, pin){
+  const pkcs8 = await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(privEnc.iv)}, await llavePin(pin, unb64(privEnc.salt)), unb64(privEnc.ct));
+  return crypto.subtle.importKey('pkcs8', pkcs8, {name:'RSA-OAEP', hash:'SHA-256'}, false, ['decrypt']);
+}
+async function sellar(pubJwk, texto){
+  const pk = await crypto.subtle.importKey('jwk', pubJwk, {name:'RSA-OAEP', hash:'SHA-256'}, false, ['encrypt']);
+  const k = await crypto.subtle.generateKey({name:'AES-GCM', length:256}, true, ['encrypt']);
+  const iv = azar(12);
+  const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, k, te.encode(texto));
+  const ek = await crypto.subtle.encrypt({name:'RSA-OAEP'}, pk, await crypto.subtle.exportKey('raw', k));
+  return {iv:b64(iv), ct:b64(ct), ek:b64(ek)};
+}
+async function abrirSobre(priv, s){
+  const raw = await crypto.subtle.decrypt({name:'RSA-OAEP'}, priv, unb64(s.ek));
+  const k = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+  return td.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:unb64(s.iv)}, k, unb64(s.ct)));
+}
+
+async function codigoValido(id, codigo){
+  const c = String(codigo || '').toUpperCase().replace(/\s+/g, '').split('-').pop();
+  if (!/^[A-Z0-9]{6}$/.test(c) || !CODIGOS[id]) return false;
+  const base = await crypto.subtle.importKey('raw', te.encode(c), 'PBKDF2', false, ['deriveBits']);
+  const bits = await crypto.subtle.deriveBits({name:'PBKDF2', salt:te.encode('cotos:' + id), iterations:100000, hash:'SHA-256'}, base, 256);
+  return [...new Uint8Array(bits)].map(b => b.toString(16).padStart(2, '0')).join('') === CODIGOS[id];
+}
+
+/* ---------- El sorteo ---------- */
+const alAzar = n => { const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; };
+const barajar = arr => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--){ const j = alAzar(i + 1); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const prohibido = (a, b) => a === b || PAREJAS.some(([x, y]) => (x === a && y === b) || (x === b && y === a));
+function sortear(sinReciprocos = true){
+  const dadores = barajar(IDS), pares = {}, usados = new Set();
+  const paso = i => {
+    if (i === dadores.length) return true;
+    for (const r of barajar(IDS)){
+      if (usados.has(r) || prohibido(dadores[i], r) || (sinReciprocos && pares[r] === dadores[i])) continue;
+      pares[dadores[i]] = r; usados.add(r);
+      if (paso(i + 1)) return true;
+      usados.delete(r); delete pares[dadores[i]];
+    }
+    return false;
+  };
+  if (!paso(0)){
+    if (sinReciprocos) return sortear(false);   // si fuera imposible evitar todos los recíprocos
+    throw new Error('No hay combinación posible');
+  }
+  verificar(pares);
+  return pares;
+}
+const reciprocos = pares => Object.keys(pares).filter(a => pares[pares[a]] === a && a < pares[a]).length;
+function verificar(pares){
+  const dan = Object.keys(pares), reciben = Object.values(pares);
+  if (dan.length !== IDS.length || !IDS.every(id => id in pares)) throw new Error('Alguien se ha quedado sin regalar');
+  if (new Set(reciben).size !== IDS.length || !IDS.every(id => reciben.includes(id))) throw new Error('Alguien se ha quedado sin regalo o recibe dos');
+  for (const d of dan) if (prohibido(d, pares[d])) throw new Error('Regalo prohibido: ' + d + ' → ' + pares[d]);
+  return true;
+}
+/* ---------- Acta en Word (.docx real, generado en el propio móvil) ---------- */
+const xe = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function wP(texto, o = {}){
+  return `<w:p><w:pPr><w:spacing w:after="${o.despues ?? 120}"/>${o.centro ? '<w:jc w:val="center"/>' : ''}</w:pPr><w:r><w:rPr><w:rFonts w:ascii="Georgia" w:hAnsi="Georgia"/>${o.negrita ? '<w:b/>' : ''}${o.cursiva ? '<w:i/>' : ''}${o.color ? `<w:color w:val="${o.color}"/>` : ''}<w:sz w:val="${(o.tam || 11) * 2}"/></w:rPr><w:t xml:space="preserve">${xe(texto)}</w:t></w:r></w:p>`;
+}
+function wCelda(texto, ancho, o = {}){
+  return `<w:tc><w:tcPr><w:tcW w:w="${ancho}" w:type="dxa"/>${o.fondo ? `<w:shd w:val="clear" w:color="auto" w:fill="${o.fondo}"/>` : ''}</w:tcPr>${wP(texto, {despues:40, ...o})}</w:tc>`;
+}
+function documentoActa(pares, fecha, ronda){
+  const borde = t => `<w:${t} w:val="single" w:sz="6" w:space="0" w:color="9A7228"/>`;
+  const anchos = [700, 3600, 700, 3600];
+  const fila = (cs, o) => `<w:tr>${cs.map((c, i) => wCelda(c, anchos[i], o)).join('')}</w:tr>`;
+  const hora = new Date(fecha).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+  const rec = reciprocos(pares);
+  const cuerpo = [
+    wP('AMIGO INVISIBLE DE COTOS', {centro:true, negrita:true, tam:15, color:'7D1D2C', despues:0}),
+    wP('Cofradía de Obedientes Tragones y Otros Sablistas', {centro:true, cursiva:true, tam:10, color:'7D1D2C', despues:300}),
+    wP('ACTA DEL SORTEO', {centro:true, negrita:true, tam:22, color:'1F4D3A', despues:300}),
+    wP(`En la casa de Cotos, a ${fLarga(fecha)}, a las ${hora} horas, por decisión de la Presidencia colegiada de Jorge y Uge, ejercida unipersonalmente por Uge, y con el debido respeto a las matriarcas Elvira y Concha, se celebra el sorteo del Amigo Invisible entre los ${N_TXT} miembros de la Cofradía, con el siguiente`, {despues:200}),
+    wP('RESULTADO', {negrita:true, tam:13, color:'B3001B'}),
+    `<w:tbl><w:tblPr><w:tblW w:w="8600" w:type="dxa"/><w:tblBorders>${['top','left','bottom','right','insideH','insideV'].map(borde).join('')}</w:tblBorders></w:tblPr><w:tblGrid>${anchos.map(a => `<w:gridCol w:w="${a}"/>`).join('')}</w:tblGrid>`
+      + fila(['Nº', 'Quien regala', '', 'A quien regala'], {negrita:true, fondo:'F3E6C8'})
+      + IDS.map((id, i) => fila([String(i + 1), nom(id), '→', nom(pares[id])])).join('')
+      + '</w:tbl>',
+    wP('', {despues:120}),
+    wP('COMPROBACIONES', {negrita:true, tam:13, color:'B3001B'}),
+    wP(`✔ ${IDS.length} miembros y ${IDS.length} regalos.`),
+    wP('✔ Nadie se regala a sí mismo.'),
+    wP('✔ Ninguna pareja se regala entre sí.'),
+    wP('✔ Cada miembro hace un solo regalo y recibe un solo regalo.'),
+    wP(rec ? `✔ Regalos recíprocos: ${rec} (no fue posible evitarlos todos).` : '✔ Ningún regalo recíproco: nadie regala a quien le regala.', {despues:300}),
+    wP('Y para que conste, se extiende la presente acta, de uso exclusivo de la Presidencia, cuya difusión no autorizada se castigará con el cierre inmediato de la bodega.', {cursiva:true, despues:500}),
+    wP('Uge, Presidenta en ejercicio', {centro:true, negrita:true, despues:0}),
+    wP('(con el visto bueno de Jorge, que asiente)', {centro:true, cursiva:true, tam:9, despues:300}),
+    wP(`Referencia del sorteo: ${ronda}`, {tam:8, color:'888888'})
+  ].join('');
+  return zipDocx({
+    '[Content_Types].xml':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>',
+    '_rels/.rels':'<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>',
+    'word/document.xml':`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>${cuerpo}<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1418" w:right="1418" w:bottom="1418" w:left="1418" w:header="708" w:footer="708" w:gutter="0"/></w:sectPr></w:body></w:document>`
+  });
+}
+const TABLA_CRC = (() => { const t = new Uint32Array(256); for (let n = 0; n < 256; n++){ let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; } return t; })();
+const crc32 = u => { let c = 0xFFFFFFFF; for (let i = 0; i < u.length; i++) c = TABLA_CRC[(c ^ u[i]) & 0xFF] ^ (c >>> 8); return (c ^ 0xFFFFFFFF) >>> 0; };
+function zipDocx(archivos){
+  const partes = [], central = []; let off = 0, n = 0;
+  for (const [nombre, txt] of Object.entries(archivos)){
+    const nb = te.encode(nombre), d = te.encode(txt), c = crc32(d); n++;
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true); h.setUint16(8, 0, true);
+    h.setUint16(10, 0, true); h.setUint16(12, 0x21, true); h.setUint32(14, c, true); h.setUint32(18, d.length, true);
+    h.setUint32(22, d.length, true); h.setUint16(26, nb.length, true); h.setUint16(28, 0, true);
+    partes.push(new Uint8Array(h.buffer), nb, d);
+    const cd = new DataView(new ArrayBuffer(46));
+    cd.setUint32(0, 0x02014b50, true); cd.setUint16(4, 20, true); cd.setUint16(6, 20, true); cd.setUint16(8, 0x0800, true);
+    cd.setUint16(10, 0, true); cd.setUint16(12, 0, true); cd.setUint16(14, 0x21, true); cd.setUint32(16, c, true);
+    cd.setUint32(20, d.length, true); cd.setUint32(24, d.length, true); cd.setUint16(28, nb.length, true);
+    cd.setUint32(42, off, true);
+    central.push(new Uint8Array(cd.buffer), nb);
+    off += 30 + nb.length + d.length;
+  }
+  const tc = central.reduce((a, b) => a + b.length, 0);
+  const e = new DataView(new ArrayBuffer(22));
+  e.setUint32(0, 0x06054b50, true); e.setUint16(8, n, true); e.setUint16(10, n, true); e.setUint32(12, tc, true); e.setUint32(16, off, true);
+  return new Blob([...partes, ...central, new Uint8Array(e.buffer)], {type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+}
+async function guardarArchivo(nombre, blob){
+  try {
+    const dl = await window.claude?.use?.('downloads');
+    if (dl){ await dl.save({filename:nombre, data:blob}); return true; }
+  } catch(e){ if (e?.code === 'declined') return false; }
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = nombre; document.body.appendChild(a); a.click();
+  setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  return true;
+}
+const nombreActa = () => `Cotos-acta-del-sorteo-${new Date(Date.parse(S.estado.fechaSorteo || ahoraISO())).toISOString().slice(0, 10)}.docx`;
+
+/* ---------- Almacén de datos: Firebase o modo ensayo ---------- */
+function almacenEnsayo(){
+  const K = 'cotos-ensayo';
+  const leer = () => { try { return JSON.parse(ls.get(K) || '{}'); } catch(e){ return {}; } };
+  let datos = leer(); const subs = {};
+  const lista = c => Object.entries(datos[c] || {}).map(([id, d]) => ({id, ...d}));
+  const emitir = c => (subs[c] || []).forEach(cb => cb(lista(c)));
+  const guardar = c => { ls.set(K, JSON.stringify(datos)); emitir(c); };
+  window.addEventListener('storage', e => { if (e.key === K){ datos = leer(); Object.keys(subs).forEach(emitir); } });
+  return {
+    tipo:'ensayo',
+    async getDoc(c, id){ return datos[c]?.[id] ? JSON.parse(JSON.stringify(datos[c][id])) : null; },
+    async setDoc(c, id, d, merge = true){ datos[c] = datos[c] || {}; datos[c][id] = merge ? {...(datos[c][id] || {}), ...d} : d; guardar(c); },
+    async delDoc(c, id){ if (datos[c]) delete datos[c][id]; guardar(c); },
+    async addDoc(c, d){ datos[c] = datos[c] || {}; datos[c]['m' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7)] = d; guardar(c); },
+    watchCol(c, cb){ (subs[c] = subs[c] || []).push(cb); setTimeout(() => cb(lista(c)), 0); return () => { subs[c] = (subs[c] || []).filter(x => x !== cb); }; }
+  };
+}
+// Cotos tiene su propio proyecto de Firebase, así que sus colecciones no llevan prefijo
+const PREFIJO = '';
+async function almacenFirebase(cfg){
+  const V = '10.12.2', base = `https://www.gstatic.com/firebasejs/${V}/`;
+  const app = await import(base + 'firebase-app.js');
+  const fs = await import(base + 'firebase-firestore.js');
+  const au = await import(base + 'firebase-auth.js');
+  const a = app.initializeApp(cfg);
+  await au.signInAnonymously(au.getAuth(a));
+  let db;
+  try { db = fs.initializeFirestore(a, {experimentalAutoDetectLongPolling:true}); } catch(e){ db = fs.getFirestore(a); }
+  return {
+    tipo:'firebase',
+    async getDoc(c, id){ const s = await fs.getDoc(fs.doc(db, PREFIJO + c, id)); return s.exists() ? s.data() : null; },
+    async setDoc(c, id, d, merge = true){ await fs.setDoc(fs.doc(db, PREFIJO + c, id), d, {merge}); },
+    async delDoc(c, id){ await fs.deleteDoc(fs.doc(db, PREFIJO + c, id)); },
+    async addDoc(c, d){ await fs.addDoc(fs.collection(db, PREFIJO + c), d); },
+    watchCol(c, cb, alFallar){ return fs.onSnapshot(fs.collection(db, PREFIJO + c), snap => cb(snap.docs.map(d => ({id:d.id, ...d.data()}))), err => { console.error(err); if (alFallar) alFallar(err); }); }
+  };
+}
+
+/* ---------- Estado ---------- */
+const S = { estado:{fase:'abierta'}, prueba:null, socios:{}, asign:{}, actas:{}, cartas:{}, mensajes:[], preguntas:[], cargado:{} };
+let DB = null;
+let sesion = null;            // {id, priv, keyId, supervisado}
+let cacheAmigo = {}, cargandoAmigo = new Set();
+const ui = { ocupado:'', confirmacion:null, modal:null, prueba:false, sobre:false, editor:null, ultimaVisita:null, dictado:null };
+
+const fase = () => S.estado?.fase || 'abierta';
+const ronda = () => S.estado?.ronda || null;
+const cartaDe = id => S.cartas[`${ronda()}_${id}`] || null;
+const enviadas = () => ronda() ? IDS.filter(id => cartaDe(id)?.enviada) : [];
+const todasEnviadas = () => fase() === 'validado' && enviadas().length === IDS.length;
+const fechaPublicacion = () => todasEnviadas() ? enviadas().map(id => cartaDe(id).fechaEnvio).sort().at(-1) : null;
+const preguntasRonda = () => S.preguntas.filter(p => p.ronda && p.ronda === ronda());
+const mensajesPara = para => S.mensajes.filter(m => m.para === para && (!m.ronda || m.ronda === ronda()));
+const registrados = () => IDS.filter(id => S.socios[id]?.pub);
+
+function amigo(){
+  if (!sesion || fase() !== 'validado') return null;
+  const k = `${ronda()}_${sesion.id}`;
+  if (k in cacheAmigo) return cacheAmigo[k];
+  if (!cargandoAmigo.has(k)){
+    cargandoAmigo.add(k);
+    (async () => {
+      let r = null;
+      const a = S.asign[k];
+      if (sesion?.priv && a && a.keyId === S.socios[sesion.id]?.keyId){ try { r = await abrirSobre(sesion.priv, a.sobre); } catch(e){ r = null; } }
+      if (!r && MODO_PRUEBA && S.prueba?.ronda === ronda()) r = S.prueba.pares?.[sesion.id] || null;
+      cacheAmigo[k] = r; cargandoAmigo.delete(k); pintar();
+    })();
+  }
+  return undefined;
+}
+
+/* ---------- Textos jocosamente serios ---------- */
+const TXT = {
+  sorteoPersonal: 'Se ha celebrado el sorteo. La Presidencia de Cotos está verificando su validez. Pronto recibirás noticias.',
+  sorteoPublico: 'Por decisión de la Presidencia (Uge, que tiene el poder) se ha celebrado el sorteo. Ahora se verifica su validez. Que nadie toque la bodega mientras tanto.',
+  validoPublico: 'Uge ha declarado VÁLIDO el sorteo. Cada miembro puede consultar en su perfil a quién le toca regalar. Queda abierto el plazo de cartas.',
+  revelacion: n => `La Presidencia ha verificado el sorteo y lo ha encontrado conforme. Debes hacer tu regalo a <b>${esc(n)}</b>. Guarda el secreto como guardas la última botella de la bodega. Ya puedes escribir tu carta.`,
+  registro: id => id === PRESIDENTA
+    ? `ACTA DE TOMA DE POSESIÓN.<br><br>En la casa de Cotos, y en la fecha que consta, <b>Uge</b> toma posesión de la Presidencia colegiada de la Cofradía, que comparte con Jorge y que ejerce ella sola, porque <b>she has the power</b>.<br><br>Las llaves de la despensa y de la bodega quedan bajo su custodia. Sus decisiones son firmes desde este preciso instante.`
+    : id === COPRESIDENTE
+    ? `ACTA DE TOMA DE POSESIÓN.<br><br>En la casa de Cotos, y en la fecha que consta, <b>Jorge</b> toma posesión de la Presidencia colegiada de la Cofradía junto a Uge.<br><br>Conforme a los estatutos, el ejercicio de la Presidencia corresponde en exclusiva a Uge. A Jorge le corresponden, en cambio, la chimenea, el sacacorchos y asentir con elegancia. Bienvenido, anfitrión.`
+    : MATRIARCAS.includes(id)
+    ? `ACTA DE INCORPORACIÓN CON HONORES.<br><br>En la fecha que consta, se inscribe en el Libro de la Cofradía a <b>${esc(nom(id))}</b>, matriarca, a quien todos los miembros deben el máximo respeto.<br><br>Se le reserva el mejor sitio junto a la chimenea y la primera copa de cada botella. Sus opiniones no son vinculantes para la Presidencia, pero nadie se ha atrevido nunca a comprobarlo.`
+    : `ACTA DE INCORPORACIÓN.<br><br>En la fecha que consta, se inscribe en el Libro de la Cofradía a <b>${esc(nom(id))}</b>, en calidad de <b>gorrón de número</b>.<br><br>Por el mero hecho de su incorporación, <b>${esc(nom(id))}</b> reconoce que la Presidencia corresponde colegiadamente a Jorge y a Uge, que la ejerce Uge en solitario (she has the power), y que a las matriarcas Elvira y Concha se les debe el máximo respeto. Se compromete además a vaciar la despensa y la bodega de Cotos con disciplina y gratitud.<br><br>Salud.`,
+  registroPublico: id => `🍷 ${nom(id)} se ha inscrito en la Cofradía.`,
+  felicitacionPublica: id => `🥂 ¡${nom(id).toUpperCase()} HA CUMPLIDO! La Presidencia y Sus Majestades los Reyes Magos brindan por ${nom(id)}, que ya ha enviado su carta. Se le reserva una copa de lo bueno.`,
+  felicitacionPersonal: 'La Presidencia de Cotos y los tres Reyes Magos brindan por ti 🥂: has enviado tu carta en tiempo y forma. Puedes seguir editándola cuando quieras, pero con moderación, como el orujo.',
+  cambiosPublicos: [
+    (n, v) => `🖋️ ${n} ha retocado su carta. Versión ${v}, como los buenos reservas: mejora con el tiempo.`,
+    (n, v) => `🔄 ${n} ha cambiado de opinión. Otra vez. Ya van ${v} versiones de su carta.`,
+    (n, v) => `🍷 Nueva añada: la carta de ${n} sale en su ${v}ª edición. Se ruega a su amigo invisible que la vuelva a leer.`,
+    (n, v) => `📣 La carta de ${n} ha sido cambiada (versión ${v}). La Presidencia toma nota y se sirve otra copa.`
+  ],
+  reproches: [
+    n => `${n}: la Presidencia ha notado, sin darle importancia, que tu carta aún no ha llegado. Seguro que es un despiste. 🍷`,
+    n => `${n}, Uge pregunta por tu carta. Le hemos dicho que estás buscando inspiración en la bodega. No se lo ha creído.`,
+    n => `AVISO OFICIAL. Se hace constar que ${n} sigue sin enviar su carta. Las matriarcas han fruncido el ceño. Las dos. 😠`,
+    n => `${n}: por tu retraso, se te sirve el vino de la cocina, no el de la bodega. Medida cautelar.`,
+    n => `REQUERIMIENTO FORMAL. Se requiere a ${n} para que envíe su carta ya mismo, con apercibimiento de quedarse sin turrón del bueno y sin sitio junto a la chimenea. 🔥`,
+    n => `${n}, tu amigo invisible está mirando calcetines de rombos. Tú sabrás.`,
+    n => `Se ha cerrado la despensa con llave hasta que llegue tu carta, ${n}. Los demás gorrones te miran mal. 🔒`,
+    n => `ÚLTIMO AVISO. Uge ha sido informada de tu caso, ${n}. She has the power, y está a punto de usarlo. 👑💢`,
+    n => `Esto ya no es un aviso, ${n}: es una tradición. Este año friegas tú. Todo. 🧽`
+  ],
+  reprochesPublicos: [
+    'La Presidencia ha notado, sin darle importancia, que faltan algunas cartas. Seguro que es un despiste.',
+    'Uge pregunta por las cartas que faltan. Se le ha dicho que sus autores buscan inspiración en la bodega. No se lo ha creído.',
+    'AVISO OFICIAL. Las matriarcas han fruncido el ceño ante la falta de cartas. Las dos. 😠',
+    'Medida cautelar: a los rezagados se les servirá el vino de la cocina, no el de la bodega.',
+    'REQUERIMIENTO PÚBLICO. Se requiere a los rezagados para que envíen su carta ya mismo, con apercibimiento de quedarse sin turrón del bueno y sin sitio junto a la chimenea. 🔥',
+    'Los amigos invisibles de los rezagados están mirando calcetines de rombos. Allá ellos.',
+    'La despensa queda cerrada con llave hasta que lleguen todas las cartas. 🔒',
+    'ÚLTIMO AVISO. Uge ha sido informada. She has the power, y está a punto de usarlo. 👑💢',
+    'Esto ya no es un aviso: es una tradición. Los rezagados friegan este año. Todo. 🧽'
+  ],
+  recordatorios: [
+    () => 'Tienes una pregunta anónima sin responder. Alguien quiere acertar contigo: déjate ayudar. 🤫',
+    () => 'La pregunta sigue ahí. Tu amigo invisible está a punto de comprarte algo de talla única.',
+    () => 'La Presidencia observa tu silencio con preocupación. Responder cuesta menos que devolver un regalo.',
+    () => 'Las matriarcas han leído la pregunta. Y han visto que no respondes. 👀',
+    () => 'RECORDATORIO SOLEMNE. Uge ha preguntado por ti. Contesta ya, por el bien de la despensa.'
+  ]
+};
+// Los reproches llegan alternando cada 2 y 3 días: días 2, 5, 7, 10, 12, 15...
+const umbralReproche = k => Math.floor(k * 2.5);
+function reprochesDe(id){
+  const out = [], ini = S.estado.fechaValidacion, ya = ahoraISO();
+  if (!ini) return out;
+  for (let k = 1; k <= 60; k++){
+    const f = sumarDias(ini, umbralReproche(k));
+    if (f > ya) break;
+    const t = TXT.reproches[Math.min(k - 1, TXT.reproches.length - 1)];
+    out.push({fecha:f, nivel:k, clase:'reproche' + (k >= 5 ? ' duro' : ''), ico:k >= 7 ? '👑💢' : k >= 3 ? '🍷💢' : '⏰', de:k >= 5 ? 'Requerimiento de la Presidencia' : 'La Presidencia', html:esc(t(nom(id)))});
+  }
+  return out;
+}
+
+/* ---------- Componentes ---------- */
+let nBotella = 0;
+const COSECHA = new Date().getFullYear();
+function botellaSVG(id){
+  const [vidrio, capsula, etiqueta, letra, tipo] = PALETAS[id] || ['#2b1a0d', '#d4a64a', '#f3e6c8', '#7d1d2c', 'Reserva'];
+  const u = 'bt' + (nBotella++), sig = SIGLAS[id] || '?';
+  const espumoso = tipo === 'Cava';
+  const cuerpo = espumoso
+    ? 'M44 6 H56 V30 C56 40 72 44 72 60 V124 Q72 128 68 128 H32 Q28 128 28 124 V60 C28 44 44 40 44 30 Z'
+    : 'M45 6 H55 V36 C55 46 70 48 70 58 V124 Q70 128 66 128 H34 Q30 128 30 124 V58 C30 48 45 46 45 36 Z';
+  const ancho = espumoso ? 44 : 40, x0 = 50 - ancho / 2;
+  return `<svg viewBox="0 0 100 132" role="img" aria-label="Botella de ${esc(nom(id))}">
+    <defs><linearGradient id="${u}" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".0"/><stop offset=".22" stop-color="#fff" stop-opacity=".28"/><stop offset=".34" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <path d="${cuerpo}" fill="${vidrio}" stroke="rgba(0,0,0,.45)" stroke-width="1"/>
+    <path d="${cuerpo}" fill="url(#${u})"/>
+    <rect x="${espumoso ? 42 : 43.5}" y="3" width="${espumoso ? 16 : 13}" height="${espumoso ? 30 : 24}" rx="2" fill="${capsula}" stroke="rgba(0,0,0,.3)" stroke-width=".6"/>
+    ${espumoso ? `<path d="M42 30 Q50 36 58 30" fill="none" stroke="${capsula}" stroke-width="2"/>` : ''}
+    <rect x="${x0 + 3}" y="70" width="${ancho - 6}" height="44" rx="2.5" fill="${etiqueta}" stroke="${capsula}" stroke-width="1.2"/>
+    <rect x="${x0 + 5.5}" y="72.5" width="${ancho - 11}" height="39" rx="1.5" fill="none" stroke="${letra}" stroke-width=".5" opacity=".6"/>
+    <text x="50" y="${sig.length > 1 ? 95 : 97}" text-anchor="middle" font-family="Fraunces, Georgia, serif" font-style="italic" font-weight="800" font-size="${sig.length > 1 ? 17 : 21}" fill="${letra}">${sig}</text>
+    <text x="50" y="80" text-anchor="middle" font-family="Figtree, Arial, sans-serif" font-weight="800" font-size="4.6" letter-spacing=".6" fill="${letra}">${esc(tipo.toUpperCase())}</text>
+    <text x="50" y="106" text-anchor="middle" font-family="Figtree, Arial, sans-serif" font-weight="600" font-size="4.2" letter-spacing=".4" fill="${letra}" opacity=".85">COTOS · ${COSECHA}</text>
+  </svg>`;
+}
+const DISTINTIVO = id => id === PRESIDENTA ? '👑' : id === COPRESIDENTE ? '🎩' : MATRIARCAS.includes(id) ? '🌟' : '';
+function bola(id, cls = ''){
+  const d = DISTINTIVO(id);
+  return `<div class="bola ${cls}">${d ? `<span class="corona">${d}</span>` : ''}${botellaSVG(id)}</div>`;
+}
+function msgHTML(m, puedeBorrar = false){
+  const nuevo = ui.ultimaVisita && m.fecha > ui.ultimaVisita ? '<span class="nuevo">NUEVO</span>' : '';
+  return `<div class="msg ${m.clase || ''}">${nuevo}<div class="ico">${m.ico || '📜'}</div><div class="cuerpo">${m.de ? `<div class="de">${esc(m.de)}</div>` : ''}<div>${m.html}</div><div class="fecha">${fHora(m.fecha)}</div></div>${puedeBorrar && m.docId ? `<button class="borrar" data-a="borrar-msg" data-id="${m.docId}">borrar</button>` : ''}</div>`;
+}
+const ESTILO = { presidencia:['presi','👑','La Presidencia'], sistema:['sistema','📢','Secretaría de la Cofradía'], felicitacion:['fiesta','🥂','La Presidencia y los Reyes'], cambio:['cambio','🖋️','Mensajería Real'], registro:['solemne','📜','Libro de la Cofradía'] };
+function deDoc(m){ const [clase, ico, de] = ESTILO[m.tipo] || ESTILO.sistema; return {fecha:m.fecha, clase, ico, de, html:m.html ? m.html : enlazar(m.texto).replace(/\n/g, '<br>'), docId:m.id}; }
+function cartaHTML(id, c){
+  if (!c) return '';
+  const enl = (c.enlaces || []).filter(e => /^https?:\/\//i.test(e.url));
+  return `<div class="carta-cab">${bola(id, 's')}<b>Carta de ${esc(nom(id))}</b></div>
+    <div class="carta">${enlazar(c.texto || '')}</div>
+    ${enl.length ? `<ul class="enlaces">${enl.map(e => `<li>🔗 <a href="${esc(e.url)}" target="_blank" rel="noopener noreferrer">${esc(e.desc || e.url)}</a></li>`).join('')}</ul>` : ''}
+    <p class="nota">Versión ${c.version || 1} · última modificación ${fHora(c.fechaUltima || c.fechaEnvio)}</p>`;
+}
+
+/* ---------- Vistas ---------- */
+const SIERRA = `<svg class="sierra" viewBox="0 0 400 58" preserveAspectRatio="none" aria-hidden="true"><path d="M0 58 L0 40 L40 26 L70 34 L110 12 L140 24 L170 8 L205 28 L240 18 L275 32 L310 14 L350 30 L400 22 L400 58 Z" fill="#0b1a14"/><path d="M110 12 L122 19 L116 20 L104 16 Z M170 8 L182 16 L174 17 L162 13 Z M310 14 L322 21 L314 22 L302 18 Z" fill="#e9eef0" opacity=".85"/><g fill="#14301f">${Array.from({length:22}, (_, k) => { const x = 8 + k * 18, h = 12 + (k * 7) % 10; return `<path d="M${x} 58 L${x + 6} ${58 - h} L${x + 12} 58 Z"/>`; }).join('')}</g></svg>`;
+function vistaInicio(){
+  const f = fase(), env = enviadas().length, N = IDS.length;
+  const cinta = f === 'abierta' ? `Cofradía: ${registrados().length} de ${N} inscritos · A la espera de que Uge convoque el sorteo`
+    : f === 'sorteado' ? 'Sorteo celebrado · La Presidencia verifica su validez'
+    : todasEnviadas() ? '¡Todas las cartas han llegado! Buzón abierto' : `Sorteo válido · Cartas enviadas: ${env} de ${N}`;
+  const visto = ls.get('cotos-visto-inicio');
+  ls.set('cotos-visto-inicio', '1');
+  const tablon = tablonItems();
+  const esPresi = sesion?.id === PRESIDENTA;
+  return `
+  <section class="hero">
+    <div class="escudo">✦ Navidad en la sierra ✦</div>
+    <h1 class="titulo"><span class="de">El Amigo Invisible</span>de Cotos</h1>
+    <p class="subtitulo"><b>C</b>ofradía de <b>O</b>bedientes <b>T</b>ragones y <b>O</b>tros <b>S</b>ablistas</p>
+    <p class="lema">«Comer, beber, regalar y obedecer a Uge»</p>
+    <div class="cinta">${esc(cinta)}</div>
+    ${SIERRA}
+  </section>
+  ${!esApp() ? `<div class="aviso-instalar"><span>📲 ¿Aún no tienes la app en tu móvil?</span><a href="#instalar">Instálala aquí</a></div>` : ''}
+
+  <details class="tarjeta estatutos" id="d-motivos" ${visto ? '' : 'open'}>
+    <summary><h2><span><span class="adorno">✦</span> Estatutos de la Cofradía</span></h2></summary>
+    <p><b>CONSIDERANDO</b> que cada Navidad un grupo de gorrones agradecidos sube a Cotos, se instala en la fantástica casa de Jorge y Uge y vacía con método la despensa y la bodega;</p>
+    <p><b>CONSIDERANDO</b> que tanta generosidad merece, como mínimo, un Amigo Invisible bien organizado,</p>
+    <p>la <b>Cofradía de Obedientes Tragones y Otros Sablistas</b> se dota de la presente aplicación para <b>asegurar la continuidad y la gestión anual de sus sorteos</b>.</p>
+    <p><b>Artículo 1. De la Presidencia.</b> La Presidencia corresponde colegiadamente a Jorge y a Uge, y la ejerce unipersonalmente Uge. Porque she has the power.</p>
+    <p><b>Artículo 2. De las matriarcas.</b> Elvira y Concha son las matriarcas de la Cofradía y se les debe el máximo respeto. Se les sirve primero y no se les lleva la contraria.</p>
+    <p><b>Artículo 3. Del sorteo.</b> Lo convoca Uge cuando quiere. Nadie conoce el resultado salvo ella, y ni siquiera esta aplicación, que lo guarda cifrado.</p>
+    <p><b>Artículo 4. De las parejas.</b> Jorge y Uge no se regalan entre sí. Javier y Titi, tampoco.</p>
+    <p><b>Artículo 5. De las cartas.</b> Cada miembro escribe su carta. Las cartas permanecen cerradas hasta que llegan todas, y el retraso se castiga en público.</p>
+    <p><b>Disposición final.</b> Lo no previsto lo resuelve Uge. Lo previsto, también.</p>
+  </details>
+
+  <details class="tarjeta presi" id="d-loa" ${visto ? '' : 'open'}>
+    <summary><h2><span><span class="adorno">♛</span> Brindis por los anfitriones</span></h2></summary>
+    <div class="trio">${bola(PRESIDENTA, 'xl')}${bola(COPRESIDENTE, 'xl')}</div>
+    <p style="text-align:center;font-family:var(--display);font-style:italic;font-weight:800;font-size:22px;color:var(--vino);margin:4px 0">Uge y Jorge</p>
+    <p>Ellos abren la casa, encienden la chimenea, llenan la despensa y bajan a la bodega sin preguntar cuántas botellas quedan. Nosotros, a cambio, aportamos apetito, sed y obediencia.</p>
+    <p>La Presidencia es <b>colegiada</b>, como mandan los cánones, pero se ejerce <b>unipersonalmente por Uge</b>, como manda el sentido común. Jorge preside con ella y asiente con elegancia.</p>
+    <p>Se recuerda a todos los gorrones que <b>las decisiones de Uge son inapelables</b>, y que quien muerde la mano que le da de comer se queda sin postre.</p>
+  </details>
+
+  <section class="tarjeta">
+    <h2><span class="adorno">✦</span> Los de la bodega</h2>
+    ${f === 'validado' ? `<p class="contador">${env} de ${N} cartas enviadas</p>` : ''}
+    <div class="censo">${IDS.map(id => {
+      let estado = '';
+      if (f === 'validado'){
+        const c = cartaDe(id);
+        estado = c?.enviada ? `<span class="cartel ok">¡Ha cumplido! 🥂</span>` : `<span class="cartel pend">Envío pendiente</span>`;
+      } else estado = S.socios[id]?.pub ? `<span class="t">✔ Inscrito</span>` : `<span class="cartel gris">Sin inscribir</span>`;
+      return `<a class="socio" href="#socio-${id}">${bola(id)}<span class="n">${esc(nom(id))}</span><span class="t">${esc(cargo(id))}</span>${estado}</a>`;
+    }).join('')}</div>
+    <p class="nota" style="text-align:center;margin-top:12px">Toca tu botella para entrar en tu perfil.</p>
+  </section>
+
+  <section class="tarjeta">
+    <h2><span class="adorno">✦</span> Tablón de anuncios</h2>
+    ${tablon.length ? tablon.map(m => msgHTML(m, esPresi)).join('') : '<p class="vacio">De momento, silencio. La Presidencia aún no ha dicho nada.</p>'}
+  </section>
+
+  ${f === 'validado' ? vistaConsultorio() : ''}
+  ${f === 'validado' ? vistaBuzon() : ''}
+  `;
+}
+function tablonItems(){
+  const todas = todasEnviadas();
+  // Los anuncios individuales de alta y de felicitación se sustituyen por un único resumen
+  const items = mensajesPara('todos').filter(m => m.tipo !== 'registro' && !(todas && m.tipo === 'felicitacion')).map(deDoc);
+  const regs = registrados();
+  if (regs.length){
+    const faltan = IDS.filter(id => !S.socios[id]?.pub);
+    const fecha = regs.map(id => S.socios[id].alta || '').sort().at(-1) || ahoraISO();
+    items.push({fecha, clase:'solemne', ico:'📜', de:'Libro de la Cofradía', html: faltan.length
+      ? `Se han inscrito en la Cofradía <b>${regs.length} de ${IDS.length}</b> miembros (${regs.map(id => esc(nom(id))).join(', ')}), y todos han acatado la autoridad de Uge y el respeto debido a las matriarcas. Faltan por inscribirse: <b>${faltan.map(id => esc(nom(id))).join(', ')}</b>.`
+      : `<b>¡COFRADÍA COMPLETA!</b> Los ${N_TXT} miembros se han inscrito y han acatado la autoridad de Uge y el respeto debido a las matriarcas. La despensa tiembla. Uge convocará el sorteo cuando le parezca.`});
+  }
+  if (todas) items.push({fecha:fechaPublicacion(), clase:'fiesta', ico:'🥂', de:'La Presidencia y los Reyes', html:`<b>¡TODOS HAN CUMPLIDO!</b> Las ${N_TXT} cartas han llegado. Uge autoriza a abrir una botella de las buenas para celebrarlo, y el buzón queda abierto para que todos lean todas las cartas.`});
+  // Reproches públicos: un único aviso, siempre arriba del todo, que señala a todos los rezagados
+  let fijo = null;
+  if (fase() === 'validado' && !todas){
+    const rezagados = IDS.filter(id => !cartaDe(id)?.enviada);
+    const lista = `<b>Envío pendiente (${rezagados.length}):</b> ${rezagados.map(id => esc(nom(id))).join(', ')}.`;
+    const ult = reprochesDe(rezagados[0]).at(-1);
+    const dias = Math.max(0, diasDesde(S.estado.fechaValidacion));
+    if (ult){
+      const k = ult.nivel, t = TXT.reprochesPublicos[Math.min(k - 1, TXT.reprochesPublicos.length - 1)];
+      fijo = {fecha:ult.fecha, clase:ult.clase, ico:ult.ico, de:'La Presidencia · a los rezagados',
+        html:`${lista}<br>${esc(t)}<div class="nota">⏳ ${dias} días desde que se comunicó el sorteo · aviso público nº ${k}</div>`};
+    } else {
+      fijo = {fecha:S.estado.fechaValidacion, clase:'reproche', ico:'📮⏰', de:'La Presidencia · a los rezagados',
+        html:`${lista}<br>La Presidencia aguarda, copa en mano, las cartas de los citados. El primer reproche público llegará en ${2 - dias === 1 ? '1 día' : '2 días'}. Quedan avisados.`};
+    }
+  }
+  const orden = items.filter(m => m.fecha).sort((a, b) => b.fecha.localeCompare(a.fecha));
+  return fijo ? [fijo, ...orden] : orden;
+}
+function vistaConsultorio(){
+  const ps = preguntasRonda().sort((a, b) => b.fecha.localeCompare(a.fecha));
+  return `<section class="tarjeta">
+    <h2><span class="adorno">✦</span> Consultorio anónimo</h2>
+    <p class="nota">Dudas de los amigos invisibles (tallas, colores, modelos…). Quien pregunta es anónimo; quien responde, no. Para preguntar a tu amigo invisible, entra en tu perfil.</p>
+    ${ps.length ? ps.map(p => `<div class="pregunta"><div class="q">🤫 Alguien pregunta a <b>${esc(nom(p.para))}</b>:</div><div>${enlazar(p.texto)}</div>
+      ${p.respuesta ? `<div class="r">💬 <b>${esc(nom(p.para))}</b> responde: ${enlazar(p.respuesta)}</div>` : `<div class="r pend">⏳ ${esc(nom(p.para))} aún no ha respondido (${Math.max(0, diasDesde(p.fecha))} días)</div>`}
+      <div class="fecha nota">${fHora(p.fecha)}</div></div>`).join('') : '<p class="vacio">Nadie tiene dudas. Sospechoso.</p>'}
+  </section>`;
+}
+function vistaBuzon(){
+  if (!todasEnviadas()){
+    const faltan = IDS.filter(id => !cartaDe(id)?.enviada);
+    return `<section class="tarjeta"><h2><span class="adorno">✦</span> Buzón de cartas</h2>
+      <p>📮 Las cartas permanecen <b>cerradas</b> hasta que todos hayan enviado la suya.</p>
+      <p>Faltan: ${faltan.map(id => `<b>${esc(nom(id))}</b>`).join(', ')}.</p></section>`;
+  }
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> Buzón de cartas</h2>
+    <p>📬 ¡Todas las cartas han llegado! Aquí están, para que todos las lean.</p>
+    ${IDS.map(id => `<details class="pregunta" id="d-carta-${id}"><summary style="cursor:pointer;font-weight:900">✉️ Carta de ${esc(nom(id))}</summary>${cartaHTML(id, cartaDe(id))}</details>`).join('')}
+  </section>`;
+}
+
+function vistaInstalar(){
+  return `<section class="tarjeta">
+    <h2><span class="adorno">✦</span> Cómo instalar la app en tu móvil</h2>
+    <p>La app no se descarga de ninguna tienda: se añade a la pantalla de inicio desde el navegador y desde entonces funciona como cualquier otra app. Es gratis y no ocupa casi nada.</p>
+    <h3>📱 En iPhone</h3>
+    <ol class="pasos">
+      <li>Abre el enlace de la app en <b>Safari</b>. Si te llegó por WhatsApp, pulsa el enlace y luego el botón <b>Compartir</b> o los tres puntos y elige <b>Abrir en Safari</b>.</li>
+      <li>Pulsa el botón <b>Compartir</b>: el cuadrado con una flecha hacia arriba (abajo en el centro, o arriba a la derecha).</li>
+      <li>Baja en el menú y pulsa <b>Añadir a pantalla de inicio</b>.</li>
+      <li>Deja el nombre «Cotos» y pulsa <b>Añadir</b>.</li>
+      <li>Cierra Safari y abre la app desde el nuevo icono de Cotos.</li>
+    </ol>
+    <h3>🤖 En Android</h3>
+    <ol class="pasos">
+      <li>Abre el enlace de la app en <b>Chrome</b>.</li>
+      <li>Pulsa el menú de los <b>tres puntos ⋮</b> (arriba a la derecha).</li>
+      <li>Pulsa <b>Instalar aplicación</b> o <b>Añadir a pantalla de inicio</b>.</li>
+      <li>Confirma con <b>Instalar</b> o <b>Añadir</b>.</li>
+      <li>Abre la app desde el nuevo icono de Cotos.</li>
+    </ol>
+    <h3>🍷 Y después</h3>
+    <ol class="pasos">
+      <li>En la pantalla de inicio, baja hasta <b>Los de la bodega</b> y toca tu botella.</li>
+      <li>La primera vez, escribe tu <b>código de invitación</b> y crea tu <b>PIN</b> (de 4 a 8 cifras). Apúntalo en lugar seguro: con él se sella tu parte del sorteo.</li>
+      <li>Deja marcada la casilla «Recordarme en este móvil» para no tener que escribirlo cada vez.</li>
+      <li>Recibirás tu acta de incorporación. Léela con una copa en la mano.</li>
+    </ol>
+    <p class="nota">Las novedades (sorteo, reproches, preguntas) aparecen en tu perfil al abrir la app. Ábrela de vez en cuando: la Presidencia lo agradecerá.</p>
+    <p style="text-align:center"><a class="btn oro" href="#inicio" style="text-decoration:none;display:inline-block">Volver al inicio</a></p>
+  </section>`;
+}
+
+function vistaPerfil(id){
+  if (!socio(id)) return '<section class="tarjeta"><p>Esa persona no consta en el Libro de la Cofradía.</p></section>';
+  const cab = `<section class="perfil-cab">${bola(id, 'xl')}
+    <h2 class="titulo" style="font-size:44px">${esc(nom(id))}</h2>
+    <div class="cargo ${id === PRESIDENTA || id === COPRESIDENTE ? 'presi' : MATRIARCAS.includes(id) ? 'matriarca' : ''}">${esc(cargo(id))}</div></section>`;
+  if (!S.cargado.socios) return cab + '<section class="tarjeta"><p>Consultando el Libro de la Cofradía…</p></section>';
+  if (sesion && !sesion.supervisado && sesion.id !== id) return cab + `<section class="tarjeta"><h2><span class="adorno">✦</span> Perfil ajeno</h2>
+    <p>Estás identificado como <b>${esc(nom(sesion.id))}</b>. Cada miembro solo puede entrar en su propio perfil.</p>
+    <div class="fila"><a class="btn oro" style="text-decoration:none" href="#socio-${sesion.id}">Ir a mi perfil</a></div>
+    <p class="nota">¿Este móvil lo usa también ${esc(nom(id))}? Primero cierra tu perfil.</p>
+    <div class="fila"><button class="btn peq" data-a="salir">Cerrar el perfil de ${esc(nom(sesion.id))}</button></div></section>`;
+  if (!sesion || sesion.id !== id) return cab + vistaAcceso(id);
+  return cab + `<div class="fila" style="justify-content:center"><button class="btn peq oro" data-a="salir">Cerrar mi perfil</button></div>`
+    + vistaSobre() + vistaMensajes(id) + vistaMiCarta(id) + vistaPreguntasRecibidas(id) + vistaPreguntar() + vistaCartaAmigo()
+    + (id === PRESIDENTA ? vistaPresidencia() : '');
+}
+function vistaAcceso(id){
+  const reg = !!S.socios[id]?.pub;
+  if (!reg) return `<section class="tarjeta"><h2><span class="adorno">✦</span> Ingreso en la Cofradía</h2>
+    <p>Es la primera vez que <b>${esc(nom(id))}</b> entra en la app. Escribe tu código de invitación y crea tu PIN personal, de 4 a 8 cifras. Te lo pedirá la app para abrir tu perfil.</p>
+    <p class="nota">⚠️ No lo olvides: con él se sella tu parte del sorteo. Si lo pierdes, solo Uge puede restablecerlo.</p>
+    <label for="codigo">Tu código de invitación</label><input id="codigo" type="text" autocapitalize="characters" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="NOMBRE-XXXXXX">
+    <p class="nota">Es personal e intransferible. Te ha llegado por WhatsApp.</p>
+    <label for="pin1">Tu nuevo PIN</label><input id="pin1" type="password" inputmode="numeric" autocomplete="new-password" maxlength="8">
+    <label for="pin2">Repítelo</label><input id="pin2" type="password" inputmode="numeric" autocomplete="new-password" maxlength="8">
+    <label class="check"><input id="recordar" type="checkbox" checked> Recordarme en este móvil</label>
+    <div class="fila"><button class="btn oro grande" data-a="registrar" data-id="${id}">Acatar los estatutos y entrar</button></div>
+    <p class="nota">¿No eres ${esc(nom(id))}? <a href="#inicio">Vuelve al inicio</a>.</p></section>`;
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> Identifícate</h2>
+    <label for="pin">PIN de ${esc(nom(id))}</label><input id="pin" type="password" inputmode="numeric" autocomplete="current-password" maxlength="8">
+    <label class="check"><input id="recordar" type="checkbox" checked> Recordarme en este móvil</label>
+    <div class="fila"><button class="btn grande" data-a="entrar" data-id="${id}">Abrir mi perfil</button></div>
+    <p class="nota">¿Has olvidado el PIN? Pide a Uge que lo restablezca. ¿No eres ${esc(nom(id))}? <a href="#inicio">Vuelve al inicio</a>.</p></section>`;
+}
+function vistaSobre(){
+  if (fase() === 'abierta') return `<section class="tarjeta"><h2><span class="adorno">✦</span> Tu amigo invisible</h2><p>Aún no se ha celebrado el sorteo. Uge lo convocará cuando le parezca, que será el momento oportuno.</p></section>`;
+  if (fase() === 'sorteado') return `<section class="tarjeta"><h2><span class="adorno">✦</span> Tu amigo invisible</h2><div class="sobre"><div style="font-size:46px">✉️🔒</div><p>${TXT.sorteoPersonal}</p></div></section>`;
+  const a = amigo();
+  if (a === undefined) return `<section class="tarjeta"><h2><span class="adorno">✦</span> Tu amigo invisible</h2><p>Abriendo el sobre…</p></section>`;
+  if (!a) return `<section class="tarjeta"><h2><span class="adorno">✦</span> Tu amigo invisible</h2><p>No se ha podido abrir tu sobre. Pide a Uge que lo vuelva a sellar desde su despacho.</p></section>`;
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> Tu amigo invisible</h2><div class="sobre">
+    ${ui.sobre ? `<p>Debes hacer tu regalo a…</p>${bola(a, 'xl')}<div class="quien">${esc(nom(a))}</div><p class="nota">🤫 Que no se entere nadie.</p><button class="btn peq oro" data-a="sobre">Volver a cerrar el sobre</button>`
+      : `<div style="font-size:52px">✉️</div><p>Uge ha validado el sorteo. Tu sobre está listo.</p><button class="btn grande" data-a="sobre">Abrir el sobre</button><p class="nota">Ábrelo donde nadie te vea.</p>`}
+  </div></section>`;
+}
+function feedPerfil(id){
+  const items = mensajesPara(id).map(deDoc);
+  const est = S.estado, ya = ahoraISO();
+  if (est.fechaSorteo && est.fase !== 'abierta') items.push({fecha:est.fechaSorteo, clase:'sistema', ico:'🎲', de:'Secretaría de la Cofradía', html:TXT.sorteoPersonal});
+  if (fase() === 'validado'){
+    const a = amigo();
+    if (a) items.push({fecha:est.fechaValidacion, clase:'solemne', ico:'📜', de:'La Presidencia', html:TXT.revelacion(nom(a))});
+    const mia = cartaDe(id);
+    if (!mia?.enviada) items.push(...reprochesDe(id));
+    // Preguntas recibidas sin responder: aviso y recordatorios cada 2 días
+    preguntasRonda().filter(p => p.para === id).forEach(p => {
+      items.push({fecha:p.fecha, clase:'presi', ico:'🤫', de:'Consultorio anónimo', html:`Tu amigo invisible te ha hecho una pregunta anónima: «${enlazar(p.texto)}». Respóndela en la sección «Preguntas que te han hecho»; tu respuesta se publicará en el inicio.`});
+      if (!p.respuesta){
+        for (let k = 1; ; k++){
+          const f = sumarDias(p.fecha, 2 * k);
+          if (f > ya || k > 60) break;
+          items.push({fecha:f, clase:'reproche', ico:'⏰', de:'Recordatorio', html:esc(TXT.recordatorios[Math.min(k - 1, TXT.recordatorios.length - 1)]())});
+        }
+      }
+    });
+    if (a){
+      const ca = cartaDe(a);
+      (ca?.ediciones || []).forEach((f, i) => items.push({fecha:f, clase:'cambio', ico:'🖋️', de:'Mensajería Real',
+        html:`Tu amigo invisible, <b>${esc(nom(a))}</b>, ha modificado su carta (versión ${i + 2}). ${todasEnviadas() ? 'Revísala abajo, no vayas a regalarle lo que ya no quiere.' : 'Podrás leerla cuando todas las cartas estén enviadas.'}`}));
+      preguntasRonda().filter(p => p.para === a && p.respuesta).forEach(p => items.push({fecha:p.fechaRespuesta, clase:'fiesta', ico:'💬', de:'Consultorio anónimo', html:`${esc(nom(a))} ha respondido a tu pregunta «${esc(p.texto)}»: <b>${enlazar(p.respuesta)}</b>`}));
+      const fp = fechaPublicacion();
+      if (fp) items.push({fecha:fp, clase:'fiesta', ico:'📬', de:'Buzón de cartas', html:`¡Todas las cartas han llegado! Ya puedes leer la carta de <b>${esc(nom(a))}</b> más abajo.`});
+    }
+  }
+  return items.filter(m => m.fecha).sort((x, y) => y.fecha.localeCompare(x.fecha));
+}
+function vistaMensajes(id){
+  const it = feedPerfil(id);
+  // Se muestran los mensajes nuevos (al menos los 3 más recientes); los antiguos quedan plegados
+  const nuevos = ui.ultimaVisita ? it.filter(m => m.fecha > ui.ultimaVisita).length : 0;
+  const n = Math.max(3, nuevos), vis = it.slice(0, n), viejos = it.slice(n);
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> Tus mensajes</h2>${it.length ? vis.map(m => msgHTML(m)).join('') : '<p class="vacio">No tienes mensajes.</p>'}
+    ${viejos.length ? `<details class="pregunta" id="d-msg-antiguos"><summary style="cursor:pointer;font-weight:900">🗄️ Ver ${viejos.length} mensaje${viejos.length > 1 ? 's' : ''} anterior${viejos.length > 1 ? 'es' : ''}</summary>${viejos.map(m => msgHTML(m)).join('')}</details>` : ''}</section>`;
+}
+function editorPara(id){
+  const k = `${ronda()}_${id}`;
+  if (!ui.editor || ui.editor.k !== k){
+    let ed = null;
+    try { ed = JSON.parse(ls.get('cotos-borrador-' + k) || 'null'); } catch(e){}
+    const c = cartaDe(id);
+    ui.editor = {k, texto:ed?.texto ?? c?.texto ?? '', enlaces:ed?.enlaces ?? (c?.enlaces || [])};
+  }
+  return ui.editor;
+}
+function guardarBorrador(){ if (ui.editor) ls.set('cotos-borrador-' + ui.editor.k, JSON.stringify({texto:ui.editor.texto, enlaces:ui.editor.enlaces})); }
+function vistaMiCarta(id){
+  if (fase() !== 'validado') return '';
+  const c = cartaDe(id), ed = editorPara(id);
+  const cambios = c?.enviada && (ed.texto !== c.texto || JSON.stringify(ed.enlaces) !== JSON.stringify(c.enlaces || []));
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> Tu carta al amigo invisible</h2>
+    ${c?.enviada ? `<p>✅ Carta enviada el ${fHora(c.fechaEnvio)}${c.version > 1 ? ` · versión ${c.version}` : ''}. Puedes seguir editándola: cada cambio se anunciará públicamente y se avisará a quien te regala.</p>`
+      : `<p>Escribe tus deseos. Solo texto y enlaces a webs. Tu carta quedará cerrada hasta que todos hayan enviado la suya.</p>`}
+    <label for="carta-texto">Querido amigo invisible:</label>
+    <textarea id="carta-texto" placeholder="Este año he gorroneado con moderación y me gustaría…">${esc(ed.texto)}</textarea>
+    <div class="fila"><button class="btn peq verde ${ui.dictado ? 'dictando' : ''}" data-a="dictar">${ui.dictado ? '⏹️ Parar dictado' : '🎤 Dictar'}</button>
+      <span class="nota">En iPhone, si no funciona, toca el cuadro y usa el micrófono 🎤 del teclado.</span></div>
+    <h3>🔗 Enlaces</h3>
+    ${ed.enlaces.length ? `<ul class="enlaces">${ed.enlaces.map((e, i) => `<li>🔗 <a href="${esc(e.url)}" target="_blank" rel="noopener noreferrer">${esc(e.desc || e.url)}</a><button class="btn peq" data-a="quitar-enlace" data-i="${i}" aria-label="Quitar enlace">✕</button></li>`).join('')}</ul>` : '<p class="nota">Sin enlaces todavía.</p>'}
+    <label for="enl-url">Dirección web</label><input id="enl-url" type="url" inputmode="url" placeholder="https://…">
+    <label for="enl-desc">Qué es (opcional)</label><input id="enl-desc" type="text" placeholder="Bufanda roja, talla M">
+    <div class="fila"><button class="btn peq oro" data-a="anadir-enlace">Añadir enlace</button></div>
+    <div class="fila"><button class="btn grande ${c?.enviada ? 'verde' : ''}" data-a="enviar-carta" ${c?.enviada && !cambios ? 'disabled' : ''}>${c?.enviada ? (cambios ? '📮 Enviar la nueva versión' : 'Sin cambios pendientes') : '📮 Enviar mi carta'}</button></div>
+    ${cambios ? '<p class="nota">✏️ Tienes cambios sin enviar.</p>' : ''}
+  </section>`;
+}
+function vistaPreguntasRecibidas(id){
+  if (fase() !== 'validado') return '';
+  const ps = preguntasRonda().filter(p => p.para === id).sort((a, b) => b.fecha.localeCompare(a.fecha));
+  if (!ps.length) return '';
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> Preguntas que te han hecho</h2>
+    ${ps.map(p => `<div class="pregunta"><div class="q">🤫 Tu amigo invisible pregunta:</div><div>${enlazar(p.texto)}</div>
+      ${p.respuesta ? `<div class="r">💬 Respondiste: ${enlazar(p.respuesta)}</div>` : `<label for="resp-${p.id}">Tu respuesta (será pública)</label><textarea id="resp-${p.id}" style="min-height:80px"></textarea><div class="fila"><button class="btn peq verde" data-a="responder" data-id="${p.id}">Responder</button></div>`}
+    </div>`).join('')}</section>`;
+}
+function vistaPreguntar(){
+  if (fase() !== 'validado') return '';
+  const a = amigo();
+  if (!a) return '';
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> Pregunta anónima a ${esc(nom(a))}</h2>
+    <p>¿Dudas sobre la talla, el color o el modelo? Pregunta sin descubrirte: se publicará en el inicio como «Alguien pregunta a ${esc(nom(a))}» y le llegará un aviso para que responda.</p>
+    <label for="preg-texto">Tu pregunta</label><textarea id="preg-texto" style="min-height:80px" placeholder="¿La bufanda la quieres roja o verde?"></textarea>
+    <div class="fila"><button class="btn peq rosa" data-a="preguntar">Publicar pregunta anónima</button></div></section>`;
+}
+function vistaCartaAmigo(){
+  if (!todasEnviadas()) return '';
+  const a = amigo();
+  if (!a) return '';
+  return `<section class="tarjeta"><h2><span class="adorno">✦</span> La carta de tu amigo invisible</h2>${cartaHTML(a, cartaDe(a))}</section>`;
+}
+function vistaPresidencia(){
+  const f = fase(), faltan = IDS.filter(id => !S.socios[id]?.pub);
+  const resellar = (f !== 'abierta') ? IDS.filter(id => S.socios[id]?.pub && S.asign[`${ronda()}_${id}`]?.keyId !== S.socios[id]?.keyId) : [];
+  return `<section class="tarjeta presi"><h2><span class="adorno">♛</span> Despacho de la Presidencia</h2>
+    <p>Uge: desde aquí ejerce usted el poder. Nadie más ve este despacho, ni siquiera Jorge.</p>
+    <h3>🎲 Sorteo</h3>
+    <p>Inscritos: <b>${IDS.length - faltan.length} de ${IDS.length}</b>.${faltan.length ? ` Faltan: ${faltan.map(nom).join(', ')}. El sorteo solo puede celebrarse con todos inscritos, porque cada uno necesita su llave para sellar su sobre.` : ''}</p>
+    <p>Estado: <b>${f === 'abierta' ? 'sin sorteo en curso' : f === 'sorteado' ? 'sorteo celebrado, pendiente de validar' : 'sorteo validado y comunicado'}</b></p>
+    <div class="fila">
+      <button class="btn grande" data-a="celebrar" ${faltan.length ? 'disabled' : ''}>🎲 ${f === 'abierta' ? 'Celebrar el sorteo' : 'Celebrar un sorteo nuevo'}</button>
+      ${f === 'sorteado' ? '<button class="btn grande verde" data-a="validar">✅ Sorteo válido. Comunicar resultado</button>' : ''}
+      ${f !== 'abierta' ? '<button class="btn peq oro" data-a="bajar-acta">📄 Descargar el acta en Word</button>' : ''}
+    </div>
+    ${resellar.length ? `<p>⚠️ Hay ${resellar.length} miembro(s) con PIN nuevo cuyo sobre debe volver a sellarse: ${resellar.map(nom).join(', ')}.</p><button class="btn peq oro" data-a="resellar">Volver a sellar sobres</button>` : ''}
+    <h3>📢 Mensaje para todos</h3>
+    <textarea id="presi-comun" style="min-height:80px" placeholder="Por la presente se hace saber…"></textarea>
+    <div class="fila"><button class="btn peq rosa" data-a="msg-comun">Publicar en el tablón</button></div>
+    <h3>✉️ Mensaje individual</h3>
+    <select id="presi-para">${IDS.filter(id => id !== PRESIDENTA).map(id => `<option value="${id}">${esc(nom(id))}</option>`).join('')}</select>
+    <textarea id="presi-indiv" style="min-height:80px;margin-top:8px" placeholder="Querido gorrón…"></textarea>
+    <div class="fila"><button class="btn peq rosa" data-a="msg-indiv">Enviar a su perfil</button></div>
+    <h3>🔑 Restablecer el PIN de un miembro</h3>
+    <p class="nota">Tendrá que crear un PIN nuevo. Si ya hubo sorteo, después habrá que volver a sellar su sobre desde aquí.</p>
+    <select id="presi-reset">${IDS.filter(id => id !== PRESIDENTA && S.socios[id]?.pub).map(id => `<option value="${id}">${esc(nom(id))}</option>`).join('')}</select>
+    <div class="fila"><button class="btn peq oro" data-a="reset-pin">Restablecer PIN</button></div>
+  </section>`;
+}
+
+/* ---------- Panel de prueba (solo versión de prueba) ---------- */
+function vistaPanelPrueba(){
+  return `<section class="tarjeta prueba"><h2>🔧 Panel de prueba</h2>
+    <p class="nota">Solo existe en la versión de prueba. Datos: <b>${DB?.tipo === 'firebase' ? 'Firebase (compartidos)' : 'modo ensayo (solo este dispositivo)'}</b>.</p>
+    <h3>⏱️ Reloj</h3>
+    <p>Fecha simulada: <b>${fHora(ahoraISO())}</b>${desfaseDias ? ` (+${desfaseDias} días)` : ''}</p>
+    <div class="fila"><button class="btn peq azul" data-a="p-reloj" data-d="1">+1 día</button><button class="btn peq azul" data-a="p-reloj" data-d="3">+3 días</button><button class="btn peq azul" data-a="p-reloj" data-d="7">+7 días</button><button class="btn peq oro" data-a="p-reloj" data-d="0">Volver a hoy</button></div>
+    <h3>👥 Miembros</h3>
+    <div class="fila"><button class="btn peq azul" data-a="p-alta">Dar de alta a los que falten (PIN ${PIN_PRUEBA})</button></div>
+    <label for="p-quien">Entrar en el perfil de… (sin PIN)</label>
+    <select id="p-quien">${IDS.map(id => `<option value="${id}">${esc(nom(id))}${id === PRESIDENTA ? ' (Presidenta)' : ''}</option>`).join('')}</select>
+    <div class="fila"><button class="btn peq azul" data-a="p-como">Entrar</button></div>
+    <h3>👁️ Ver todo</h3>
+    <div class="fila"><button class="btn peq azul" data-a="p-resultado">Resultado del sorteo</button><button class="btn peq azul" data-a="p-cartas">Todas las cartas (aunque estén lacradas)</button></div>
+    <h3>⚡ Atajos</h3>
+    <div class="fila"><button class="btn peq azul" data-a="p-cartas-auto">Enviar cartas de ejemplo de los que faltan</button></div>
+    <div class="fila"><button class="btn peq" data-a="p-borrar">🗑️ Borrar todos los datos</button></div>
+    <div class="fila"><button class="btn peq oro" data-a="cerrar-capa">Cerrar</button></div>
+  </section>`;
+}
+
+/* ---------- Pintado ---------- */
+let pintPend = false;
+function pintar(){ if (pintPend) return; pintPend = true; requestAnimationFrame(() => { pintPend = false; pintarYa(); }); }
+function pintarYa(){
+  // Conservar lo que el usuario está escribiendo
+  const guard = {}, act = document.activeElement;
+  document.querySelectorAll('#app input[id],#app textarea[id],#app select[id],#capas input[id],#capas textarea[id],#capas select[id]').forEach(el => { guard[el.id] = el.type === 'checkbox' ? el.checked : el.value; });
+  const abiertos = {}; document.querySelectorAll('details[id]').forEach(d => abiertos[d.id] = d.open);
+  const foco = act?.id, sel = act && 'selectionStart' in act ? [act.selectionStart, act.selectionEnd] : null;
+  const y = window.scrollY;
+
+  if (sesion && !sesion.supervisado && S.cargado.socios && S.socios[sesion.id]?.keyId !== sesion.keyId){ sesion = null; ls.del('cotos-sesion'); tostada('Tu PIN ha sido restablecido por la Presidencia. Crea uno nuevo.'); }
+  const ruta = location.hash.replace(/^#\/?/, '') || 'inicio';
+  const m = ruta.match(/^socio[-/]([a-z]+)/);
+  $('#app').innerHTML = m ? vistaPerfil(m[1]) : ruta === 'instalar' ? vistaInstalar() : vistaInicio();
+  $('#nav').innerHTML = `<a href="#inicio" class="${ruta === 'inicio' ? 'activo' : ''}">🏠 Inicio</a>${sesion ? `<a href="#socio-${sesion.id}" class="${m && m[1] === sesion.id ? 'activo' : ''}">🎁 ${esc(nom(sesion.id))}</a>` : ''}<a href="#instalar" class="${ruta === 'instalar' ? 'activo' : ''}">📲 Instalar</a><a href="#${ruta}" data-a="actualizar" aria-label="Actualizar">🔄</a>`;
+  $('#franja').innerHTML = MODO_PRUEBA ? `<div class="franja-prueba ${sesion?.supervisado ? 'supervisado' : ''}">VERSIÓN DE PRUEBA ${VERSION}${S.sincronizado ? ` · al día ${new Date(S.sincronizado).toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'})}` : ' · conectando…'}${DB?.tipo === 'ensayo' ? ' · MODO ENSAYO (solo este dispositivo)' : ''}${desfaseDias ? ` · RELOJ +${desfaseDias} DÍAS` : ''}${sesion?.supervisado ? ` · VIENDO COMO ${esc(nom(sesion.id).toUpperCase())}` : ''}</div>` : '';
+  let capas = '';
+  if (MODO_PRUEBA) capas += `<button class="boton-prueba" data-a="abrir-prueba" aria-label="Panel de prueba">🔧</button>`;
+  if (ui.prueba) capas += `<div class="capa" data-a="fondo-capa">${vistaPanelPrueba()}</div>`;
+  if (ui.modal) capas += `<div class="capa" data-a="fondo-capa"><section class="tarjeta"><h2>${ui.modal.titulo}</h2>${ui.modal.html}<div class="fila"><button class="btn peq oro" data-a="cerrar-capa">Cerrar</button></div></section></div>`;
+  if (ui.confirmacion) capas += `<div class="capa"><section class="tarjeta"><h2><span class="adorno">✦</span> Confirmación</h2><p>${esc(ui.confirmacion.texto)}</p><div class="fila"><button class="btn verde" data-a="conf-si">Sí, adelante</button><button class="btn oro" data-a="conf-no">Mejor no</button></div></section></div>`;
+  if (ui.ocupado) capas += `<div class="ocupado"><div><div class="giro">❄️</div><p>${esc(ui.ocupado)}</p></div></div>`;
+  $('#capas').innerHTML = capas;
+
+  for (const [k, v] of Object.entries(guard)){ const el = document.getElementById(k); if (!el) continue; if (el.type === 'checkbox') el.checked = v; else if (el.id !== 'carta-texto') el.value = v; }
+  for (const [k, v] of Object.entries(abiertos)){ const d = document.getElementById(k); if (d) d.open = v; }
+  if (foco){ const el = document.getElementById(foco); if (el){ el.focus({preventScroll:true}); if (sel && 'setSelectionRange' in el){ try { el.setSelectionRange(sel[0], sel[1]); } catch(e){} } } }
+  window.scrollTo(0, y);
+}
+
+/* ---------- Acciones ---------- */
+function confirmar(texto){
+  return new Promise(res => { ui.confirmacion = {texto, res}; pintarYa(); });
+}
+function cerrarConfirmacion(valor){ const c = ui.confirmacion; ui.confirmacion = null; if (c) c.res(valor); }
+async function ocupado(texto, fn){
+  ui.ocupado = texto; pintarYa();
+  await new Promise(r => setTimeout(r, 30));
+  try { return await fn(); }
+  catch(e){ console.error(e); tostada('⚠️ ' + (e.message || e)); }
+  finally { ui.ocupado = ''; pintar(); }
+}
+function guardarSesion(id, pin){ ls.set('cotos-sesion', JSON.stringify({id, pin})); }
+async function darDeAlta(id, pin){
+  const ya = await DB.getDoc('socios', id);
+  if (ya?.pub) throw new Error(`${nom(id)} ya tenía PIN. Si no fuiste tú, avisa a Uge.`);
+  const {doc, priv} = await crearLlaves(pin);
+  await DB.setDoc('socios', id, {...doc, alta:ahoraISO()}, false);
+  const renovado = S.mensajes.some(m => m.para === id && m.tipo === 'registro');
+  if (renovado){
+    await DB.addDoc('mensajes', {para:id, tipo:'registro', ronda:null, fecha:ahoraISO(), html:'Tu nuevo PIN ha quedado registrado. Uge, en su infinita generosidad, te concede una nueva oportunidad. No la desaproveches.'});
+  } else {
+    await DB.addDoc('mensajes', {para:id, tipo:'registro', ronda:null, fecha:ahoraISO(), html:TXT.registro(id)});
+    await DB.addDoc('mensajes', {para:'todos', tipo:'registro', ronda:null, fecha:ahoraISO(), texto:TXT.registroPublico(id)});
+  }
+  return {priv, keyId:doc.keyId};
+}
+async function enviarCarta(id, texto, enlaces){
+  const k = `${ronda()}_${id}`, c = S.cartas[k], f = ahoraISO();
+  if (!c?.enviada){
+    await DB.setDoc('cartas', k, {ronda:ronda(), socio:id, texto, enlaces, enviada:true, fechaEnvio:f, fechaUltima:f, version:1, ediciones:[]}, false);
+    await DB.addDoc('mensajes', {para:id, tipo:'felicitacion', ronda:ronda(), fecha:f, texto:TXT.felicitacionPersonal});
+    await DB.addDoc('mensajes', {para:'todos', tipo:'felicitacion', ronda:ronda(), fecha:f, texto:TXT.felicitacionPublica(id)});
+  } else {
+    const v = (c.version || 1) + 1;
+    await DB.setDoc('cartas', k, {texto, enlaces, fechaUltima:f, version:v, ediciones:[...(c.ediciones || []), f]});
+    await DB.addDoc('mensajes', {para:'todos', tipo:'cambio', ronda:ronda(), fecha:f, texto:TXT.cambiosPublicos[(v - 2) % TXT.cambiosPublicos.length](nom(id), v)});
+  }
+}
+async function celebrarSorteo(){
+  const pares = sortear();
+  const r = 'r' + Date.now().toString(36), f = ahoraISO();
+  for (const id of IDS){
+    const so = S.socios[id];
+    await DB.setDoc('asignaciones', `${r}_${id}`, {ronda:r, socio:id, keyId:so.keyId, sobre:await sellar(so.pub, pares[id])}, false);
+  }
+  await DB.setDoc('actas', r, {ronda:r, fecha:f, sobre:await sellar(S.socios[PRESIDENTA].pub, JSON.stringify({pares, fecha:f, ronda:r}))}, false);
+  if (MODO_PRUEBA) await DB.setDoc('general', 'prueba', {ronda:r, pares, fecha:f}, false);
+  await DB.setDoc('general', 'estado', {ronda:r, fase:'sorteado', fechaSorteo:f, fechaValidacion:null}, false);
+  await DB.addDoc('mensajes', {para:'todos', tipo:'sistema', ronda:r, fecha:f, texto:'🎲 ' + TXT.sorteoPublico});
+  return {pares, f, r};
+}
+async function leerActa(){
+  const a = S.actas[ronda()];
+  if (a && sesion?.priv){ try { return JSON.parse(await abrirSobre(sesion.priv, a.sobre)); } catch(e){} }
+  if (MODO_PRUEBA && S.prueba?.ronda === ronda()) return {pares:S.prueba.pares, fecha:S.prueba.fecha || S.estado.fechaSorteo, ronda:ronda()};
+  throw new Error('No se ha podido abrir el acta con esta llave.');
+}
+
+const acciones = {
+  'actualizar'(el, ev){ ev.preventDefault(); if (DB) window.reconectar(); tostada('🔄 Actualizando…', 1500); },
+  'conf-si'(){ cerrarConfirmacion(true); },
+  'conf-no'(){ cerrarConfirmacion(false); },
+  'abrir-prueba'(){ ui.prueba = true; },
+  'cerrar-capa'(){ ui.prueba = false; ui.modal = null; },
+  'fondo-capa'(el, ev){ if (ev.target === el){ ui.prueba = false; ui.modal = null; } },
+  'sobre'(){ ui.sobre = !ui.sobre; },
+  'salir'(){ sesion = null; ls.del('cotos-sesion'); ui.sobre = false; ui.editor = null; location.hash = '#inicio'; },
+  async 'registrar'(el){
+    const id = el.dataset.id, p1 = $('#pin1').value.trim(), p2 = $('#pin2').value.trim();
+    if (!/^\d{4,8}$/.test(p1)) return tostada('El PIN debe tener entre 4 y 8 cifras.');
+    if (p1 !== p2) return tostada('Los dos PIN no coinciden. Concentración, por favor.');
+    const recordar = $('#recordar').checked, codigo = $('#codigo').value;
+    await ocupado('Inscribiéndote en la Cofradía y forjando tu llave…', async () => {
+      if (!await codigoValido(id, codigo)) throw new Error(`Ese no es el código de invitación de ${nom(id)}. Revisa el WhatsApp que te llegó.`);
+      const {priv, keyId} = await darDeAlta(id, p1);
+      sesion = {id, priv, keyId}; ui.ultimaVisita = null; ls.set('cotos-visita-' + id, ahoraISO());
+      if (recordar) guardarSesion(id, p1);
+      tostada('🍷 ¡Ya eres de la Cofradía! Lee tu acta.');
+    });
+  },
+  async 'entrar'(el){
+    const id = el.dataset.id, pin = $('#pin').value.trim(), recordar = $('#recordar').checked;
+    await ocupado('Comprobando tus credenciales…', async () => {
+      try { sesion = {id, priv:await abrirLlave(S.socios[id].privEnc, pin), keyId:S.socios[id].keyId}; }
+      catch(e){ throw new Error('PIN incorrecto. Uge toma nota.'); }
+      ui.ultimaVisita = ls.get('cotos-visita-' + id); ls.set('cotos-visita-' + id, ahoraISO());
+      cacheAmigo = {}; ui.sobre = false; ui.editor = null;
+      if (recordar) guardarSesion(id, pin);
+    });
+  },
+  'dictar'(){
+    if (ui.dictado){ try { ui.dictado.stop(); } catch(e){} ui.dictado = null; return; }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SR) return tostada('Este navegador no deja dictar desde la app. Toca el cuadro de texto y usa el micrófono 🎤 del teclado.', 6000);
+    const r = new SR(); r.lang = 'es-ES'; r.continuous = true; r.interimResults = false;
+    r.onresult = e => {
+      const t = [...e.results].slice(e.resultIndex).filter(x => x.isFinal).map(x => x[0].transcript).join(' ').trim();
+      if (!t || !ui.editor) return;
+      const ta = $('#carta-texto'); const base = ta ? ta.value : ui.editor.texto;
+      ui.editor.texto = (base + (base && !/\s$/.test(base) ? ' ' : '') + t);
+      if (ta) ta.value = ui.editor.texto;
+      guardarBorrador(); pintar();
+    };
+    r.onerror = e => { tostada('Dictado detenido: ' + e.error); ui.dictado = null; pintar(); };
+    r.onend = () => { ui.dictado = null; pintar(); };
+    try { r.start(); ui.dictado = r; tostada('🎤 Habla ahora.'); } catch(e){ tostada('No se pudo iniciar el dictado.'); }
+  },
+  'anadir-enlace'(){
+    let url = $('#enl-url').value.trim(); const desc = $('#enl-desc').value.trim();
+    if (!url) return tostada('Escribe la dirección web.');
+    if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+    try { const u = new URL(url); if (!/^https?:$/.test(u.protocol) || !u.hostname.includes('.')) throw 0; } catch(e){ return tostada('Esa dirección no parece una web.'); }
+    ui.editor.enlaces = [...ui.editor.enlaces, {url, desc}]; guardarBorrador();
+    $('#enl-url').value = ''; $('#enl-desc').value = '';
+  },
+  'quitar-enlace'(el){ ui.editor.enlaces = ui.editor.enlaces.filter((_, i) => i !== Number(el.dataset.i)); guardarBorrador(); },
+  async 'enviar-carta'(){
+    const id = sesion.id, ed = ui.editor;
+    ed.texto = $('#carta-texto').value;
+    if (!ed.texto.trim() && !ed.enlaces.length) return tostada('Una carta vacía no se puede enviar.');
+    const ya = cartaDe(id)?.enviada;
+    if (ya && !await confirmar('El cambio se anunciará públicamente y se avisará a quien te regala. ¿Enviar la nueva versión?')) return;
+    await ocupado('Enviando tu carta…', async () => {
+      await enviarCarta(id, ed.texto, ed.enlaces);
+      ls.del('cotos-borrador-' + ed.k); ui.editor = null;
+      tostada(ya ? '🖋️ Nueva versión enviada.' : '🥂 ¡Carta enviada! La Presidencia brinda por ti.');
+    });
+  },
+  async 'preguntar'(){
+    const t = $('#preg-texto').value.trim(), a = amigo();
+    if (!t) return tostada('Escribe tu pregunta.');
+    if (!a) return;
+    await ocupado('Publicando de forma anónima…', async () => {
+      await DB.addDoc('preguntas', {ronda:ronda(), para:a, texto:t, fecha:ahoraISO(), respuesta:null, fechaRespuesta:null});
+      $('#preg-texto').value = '';
+      tostada('🤫 Pregunta publicada. Nadie sabrá que has sido tú.');
+    });
+  },
+  async 'responder'(el){
+    const id = el.dataset.id, t = $('#resp-' + id).value.trim();
+    if (!t) return tostada('Escribe tu respuesta.');
+    await ocupado('Publicando tu respuesta…', async () => { await DB.setDoc('preguntas', id, {respuesta:t, fechaRespuesta:ahoraISO()}); tostada('💬 Respuesta publicada en el inicio.'); });
+  },
+  async 'celebrar'(){
+    if (ronda() && !await confirmar('Ya hay un sorteo en curso. Si celebra uno nuevo, se anulan el resultado, las cartas y las preguntas actuales. ¿Seguimos, Uge?')) return;
+    if (!ronda() && !await confirmar('¿Celebrar el sorteo? Recibirás el resultado en un documento de Word que solo tú podrás abrir.')) return;
+    await ocupado(`Agitando el bombo y sellando ${N_TXT} sobres…`, async () => {
+      const {pares, f, r} = await celebrarSorteo();
+      ui.editor = null;
+      ui.ocupado = 'Redactando el acta en Word…'; pintarYa();
+      const ok = await guardarArchivo(nombreActa(), documentoActa(pares, f, r));
+      ui.modal = {titulo:'📜 Sorteo celebrado', html:`<p>Uge: el sorteo se ha celebrado y cada miembro tiene ya su sobre sellado.</p><p>${ok ? 'El resultado se te ha entregado en un <b>documento de Word</b>. Ábrelo para verlo: es el único lugar donde consta.' : 'No se ha guardado el documento de Word.'} Si no lo encuentras, pulsa «Descargar el acta en Word» en tu despacho.</p><p>Si está conforme, pulsa «Sorteo válido. Comunicar resultado».</p>`};
+    });
+  },
+  async 'validar'(){
+    if (!await confirmar('¿Declaras válido el sorteo? Cada miembro verá en su perfil a quién debe regalar.')) return;
+    await ocupado(`Comunicando el resultado a los ${N_TXT}…`, async () => {
+      const f = ahoraISO();
+      await DB.setDoc('general', 'estado', {fase:'validado', fechaValidacion:f});
+      await DB.addDoc('mensajes', {para:'todos', tipo:'sistema', ronda:ronda(), fecha:f, texto:'✅ ' + TXT.validoPublico});
+      tostada('✅ Resultado comunicado.');
+    });
+  },
+  async 'bajar-acta'(){
+    await ocupado('Redactando el acta en Word…', async () => {
+      const {pares, fecha, ronda:r} = await leerActa();
+      const ok = await guardarArchivo(nombreActa(), documentoActa(pares, fecha, r));
+      if (ok) tostada('📄 Acta entregada. Ábrela para ver el resultado.');
+    });
+  },
+  async 'resellar'(){
+    await ocupado('Volviendo a sellar sobres…', async () => {
+      const {pares} = await leerActa();
+      for (const id of IDS){
+        const so = S.socios[id], a = S.asign[`${ronda()}_${id}`];
+        if (so?.pub && a?.keyId !== so.keyId) await DB.setDoc('asignaciones', `${ronda()}_${id}`, {ronda:ronda(), socio:id, keyId:so.keyId, sobre:await sellar(so.pub, pares[id])}, false);
+      }
+      tostada('Sobres sellados de nuevo.');
+    });
+  },
+  async 'msg-comun'(){
+    const t = $('#presi-comun').value.trim(); if (!t) return;
+    await DB.addDoc('mensajes', {para:'todos', tipo:'presidencia', ronda:null, fecha:ahoraISO(), texto:t});
+    $('#presi-comun').value = ''; tostada('📢 Publicado en el tablón.');
+  },
+  async 'msg-indiv'(){
+    const para = $('#presi-para').value, t = $('#presi-indiv').value.trim(); if (!t) return;
+    await DB.addDoc('mensajes', {para, tipo:'presidencia', ronda:null, fecha:ahoraISO(), texto:t});
+    $('#presi-indiv').value = ''; tostada(`✉️ Enviado a ${nom(para)}.`);
+  },
+  async 'reset-pin'(){
+    const id = $('#presi-reset').value; if (!id) return;
+    if (!await confirmar(`¿Restablecer el PIN de ${nom(id)}? Tendrá que crear uno nuevo.`)) return;
+    await DB.delDoc('socios', id);
+    await DB.addDoc('mensajes', {para:'todos', tipo:'presidencia', ronda:null, fecha:ahoraISO(), texto:`🔑 Uge ha restablecido el PIN de ${nom(id)}, que deberá crear uno nuevo. Se le recuerda que la memoria también es una virtud navideña, como el moderar el orujo.`});
+    tostada(`PIN de ${nom(id)} restablecido.`);
+  },
+  async 'borrar-msg'(el){
+    if (!await confirmar('¿Borrar este mensaje del tablón?')) return;
+    await DB.delDoc('mensajes', el.dataset.id);
+  },
+  // --- Prueba ---
+  'p-reloj'(el){
+    const d = Number(el.dataset.d); desfaseDias = d === 0 ? 0 : desfaseDias + d;
+    ui.prueba = false; ls.set('cotos-desfase', String(desfaseDias)); tostada(d === 0 ? 'Reloj en la fecha real.' : `Reloj adelantado: +${desfaseDias} días.`);
+  },
+  async 'p-alta'(){
+    await ocupado('Dando de alta a los que faltan…', async () => {
+      const falt = IDS.filter(id => !S.socios[id]?.pub);
+      for (const id of falt){ ui.ocupado = `Dando de alta a ${nom(id)}…`; pintarYa(); await darDeAlta(id, PIN_PRUEBA); }
+      tostada(falt.length ? `${falt.length} miembros dados de alta con PIN ${PIN_PRUEBA}.` : 'Ya estaban todos.');
+      ui.prueba = false;
+    });
+  },
+  'p-como'(){
+    const id = $('#p-quien').value;
+    sesion = {id, priv:null, keyId:S.socios[id]?.keyId, supervisado:true};
+    cacheAmigo = {}; ui.sobre = false; ui.editor = null; ui.prueba = false; ui.ultimaVisita = null;
+    location.hash = '#socio-' + id;
+  },
+  'p-resultado'(){
+    if (!S.prueba || S.prueba.ronda !== ronda()) return tostada('No hay sorteo en curso.');
+    ui.prueba = false;
+    ui.modal = {titulo:'👁️ Resultado del sorteo', html:`<table class="pares">${IDS.map(id => `<tr><td><b>${esc(nom(id))}</b></td><td>→</td><td>${esc(nom(S.prueba.pares[id]))}</td></tr>`).join('')}</table><p class="nota">Solo visible en la versión de prueba.</p>`};
+  },
+  'p-cartas'(){
+    const hay = enviadas();
+    ui.prueba = false;
+    ui.modal = {titulo:'👁️ Todas las cartas', html:hay.length ? hay.map(id => `<div class="pregunta">${cartaHTML(id, cartaDe(id))}</div>`).join('') : '<p class="vacio">Nadie ha enviado carta todavía.</p>'};
+  },
+  async 'p-cartas-auto'(){
+    if (fase() !== 'validado') return tostada('Primero hay que celebrar y validar el sorteo.');
+    await ocupado('Escribiendo cartas de ejemplo…', async () => {
+      const falt = IDS.filter(id => !cartaDe(id)?.enviada);
+      for (const id of falt) await enviarCarta(id, `Querido amigo invisible: soy ${nom(id)}. Este año he gorroneado con moderación. Me gustaría una bufanda de cuadros, un buen libro y que Uge me siga invitando a Cotos.`, [{url:'https://es.wikipedia.org/wiki/Puerto_de_Cotos', desc:'Un fin de semana más en Cotos'}]);
+      tostada(`${falt.length} cartas de ejemplo enviadas.`);
+      ui.prueba = false;
+    });
+  },
+  async 'p-borrar'(){
+    if (!await confirmar('¿Borrar TODOS los datos (inscripciones, sorteo, cartas, mensajes)? No se puede deshacer.')) return;
+    await ocupado('Borrando todo…', async () => {
+      for (const id of Object.keys(S.socios)) await DB.delDoc('socios', id);
+      for (const id of Object.keys(S.asign)) await DB.delDoc('asignaciones', id);
+      for (const id of Object.keys(S.actas)) await DB.delDoc('actas', id);
+      for (const id of Object.keys(S.cartas)) await DB.delDoc('cartas', id);
+      for (const m of S.mensajes) await DB.delDoc('mensajes', m.id);
+      for (const p of S.preguntas) await DB.delDoc('preguntas', p.id);
+      await DB.delDoc('general', 'estado'); await DB.delDoc('general', 'prueba');
+      sesion = null; ls.del('cotos-sesion'); desfaseDias = 0; ls.set('cotos-desfase', '0');
+      try { Object.keys(localStorage).filter(k => k.startsWith('cotos-borrador') || k.startsWith('cotos-visita')).forEach(k => ls.del(k)); } catch(e){}
+      cacheAmigo = {}; ui.editor = null; ui.prueba = false;
+      location.hash = '#inicio';
+      tostada('Todo borrado. La Cofradía vuelve a empezar.');
+    });
+  }
+};
+
+document.addEventListener('click', async ev => {
+  const el = ev.target.closest('[data-a]');
+  if (!el) return;
+  const fn = acciones[el.dataset.a];
+  if (!fn) return;
+  if (el.dataset.a === 'fondo-capa' && ev.target !== el) return;
+  try { await fn(el, ev); } catch(e){ console.error(e); tostada('⚠️ ' + (e.message || e)); }
+  pintar();
+});
+document.addEventListener('input', ev => {
+  if (ev.target.id === 'carta-texto' && ui.editor){ ui.editor.texto = ev.target.value; guardarBorrador(); }
+});
+document.addEventListener('change', ev => { if (ev.target.id === 'carta-texto') pintar(); });
+window.addEventListener('hashchange', () => { ui.sobre = false; window.scrollTo(0, 0); pintar(); });
+
+/* ---------- Decoración ---------- */
+(function decorar(){
+  const colores = ['#ffd98a', '#ffe9b8', '#f4b860', '#fff3d6'];
+  $('#luces').innerHTML = Array.from({length:22}, (_, i) => `<span class="bombilla" style="color:${colores[i % colores.length]};animation-delay:${(i % 4) * 0.27}s"></span>`).join('');
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  $('#nieve').innerHTML = Array.from({length:16}, () => {
+    const s = 10 + Math.random() * 16, d = 7 + Math.random() * 10;
+    return `<span class="copo" style="left:${Math.random() * 100}vw;font-size:${s}px;animation-duration:${d}s;animation-delay:-${Math.random() * d}s">❄</span>`;
+  }).join('');
+})();
+
+/* ---------- Arranque ---------- */
+(async function arrancar(){
+  pintarYa();
+  if (!window.crypto?.subtle){ $('#app').innerHTML = '<section class="tarjeta"><p>Este navegador no es compatible. Abre la app en Safari o Chrome actualizados.</p></section>'; return; }
+  try { DB = FIREBASE_CONFIG ? await almacenFirebase(FIREBASE_CONFIG) : almacenEnsayo(); }
+  catch(e){ console.error(e); $('#app').innerHTML = `<section class="tarjeta"><p>No se ha podido conectar con la base de datos: ${esc(e.message)}</p></section>`; return; }
+  let autoIntentado = false;
+  const OYENTES = {
+    general: docs => {
+      const est = docs.find(d => d.id === 'estado');
+      const antes = ronda();
+      S.estado = est || {fase:'abierta'};
+      S.prueba = docs.find(d => d.id === 'prueba') || null;
+      if (antes !== ronda()){ ui.editor = null; ui.sobre = false; }
+      cacheAmigo = {};
+    },
+    socios: async docs => {
+      S.socios = Object.fromEntries(docs.map(d => [d.id, d])); S.cargado.socios = true; cacheAmigo = {};
+      if (!autoIntentado){
+        autoIntentado = true;
+        try {
+          const g = JSON.parse(ls.get('cotos-sesion') || 'null');
+          if (g && S.socios[g.id]?.privEnc){
+            const priv = await abrirLlave(S.socios[g.id].privEnc, g.pin);
+            sesion = {id:g.id, priv, keyId:S.socios[g.id].keyId};
+            ui.ultimaVisita = ls.get('cotos-visita-' + g.id); ls.set('cotos-visita-' + g.id, ahoraISO());
+          }
+        } catch(e){ ls.del('cotos-sesion'); }
+      }
+    },
+    asignaciones: docs => { S.asign = Object.fromEntries(docs.map(d => [d.id, d])); cacheAmigo = {}; },
+    actas: docs => { S.actas = Object.fromEntries(docs.map(d => [d.id, d])); },
+    cartas: docs => { S.cartas = Object.fromEntries(docs.map(d => [d.id, d])); },
+    mensajes: docs => { S.mensajes = docs; },
+    preguntas: docs => { S.preguntas = docs; }
+  };
+  let bajas = [], reintento = null;
+  // (Re)conecta con el almacén: al abrir, al volver del segundo plano y al pulsar 🔄
+  window.reconectar = function(){
+    bajas.forEach(f => { try { f(); } catch(e){} });
+    clearTimeout(reintento);
+    bajas = Object.entries(OYENTES).map(([c, fn]) => DB.watchCol(c, async docs => {
+      await fn(docs); S.sincronizado = Date.now(); pintar();
+    }, () => { clearTimeout(reintento); reintento = setTimeout(window.reconectar, 4000); }));
+  };
+  window.reconectar();
+  let ultimoAviso = Date.now();
+  const alVolver = () => {
+    if (document.visibilityState !== 'visible') return;
+    pintar();                                   // recalcula reproches y avisos según la hora
+    if (Date.now() - ultimoAviso > 3000){ ultimoAviso = Date.now(); window.reconectar(); }
+  };
+  document.addEventListener('visibilitychange', alVolver);
+  window.addEventListener('pageshow', alVolver);
+  window.addEventListener('online', alVolver);
+  window.addEventListener('focus', alVolver);
+  setInterval(() => { if (document.visibilityState === 'visible') pintar(); }, 60000);
+})();
+</script>
+</body>
+</html>
