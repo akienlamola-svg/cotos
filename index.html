@@ -218,12 +218,12 @@ const FIREBASE_CONFIG = {
 // 2) Versión de prueba: true = aparece el botón azul 🔧 con el que se
 //    ve todo (resultado del sorteo, cartas ocultas), se entra en
 //    cualquier perfil y se adelanta el reloj. Para la versión real: false.
-const MODO_PRUEBA = true;
+const MODO_PRUEBA = false;
 
 /* ===================================================================== */
 
 const PIN_PRUEBA = '1111';
-const VERSION = '1';
+const VERSION = '2';
 const PRESIDENTA = 'uge';          // ejerce la Presidencia (she has the power)
 const COPRESIDENTE = 'jorge';      // Presidencia colegiada, ejercicio unipersonal de Uge
 const MATRIARCAS = ['elvira', 'concha'];
@@ -1318,7 +1318,13 @@ window.addEventListener('hashchange', () => { ui.sobre = false; window.scrollTo(
     clearTimeout(reintento);
     bajas = Object.entries(OYENTES).map(([c, fn]) => DB.watchCol(c, async docs => {
       await fn(docs); S.sincronizado = Date.now(); pintar();
-    }, () => { clearTimeout(reintento); reintento = setTimeout(window.reconectar, 4000); }));
+    }, err => {
+      const motivo = err?.code === 'permission-denied' ? 'la base de datos no da permiso (revisa las Reglas de Firestore)'
+        : err?.code === 'not-found' || /does not exist/i.test(err?.message || '') ? 'la base de datos no existe (revisa que Firestore esté creado)'
+        : (err?.code || err?.message || 'error desconocido');
+      if (!window.__avisoError){ window.__avisoError = true; tostada('⚠️ Sin conexión con el almacén: ' + motivo, 9000); setTimeout(() => { window.__avisoError = false; }, 20000); }
+      clearTimeout(reintento); reintento = setTimeout(window.reconectar, 4000);
+    }));
   };
   window.reconectar();
   let ultimoAviso = Date.now();
